@@ -134,7 +134,7 @@ go func() {
                 fmt.Println(err)
             }
 
-            errj := ioutil.WriteFile("apidata", jsonData, 0644)
+            errj := ioutil.WriteFile("apidata.txt", jsonData, 0644)
 	        if errj != nil {
 		        fmt.Println(err)
 	        }
