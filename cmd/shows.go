@@ -46,12 +46,17 @@ var showsCmd = &cobra.Command{
 			if err != nil {
 				fmt.Println(err)
 			}
-            b, err2 := json.MarshalIndent(shows, "", " ")
-            if err2 != nil {
-				fmt.Println(err2)
-			}
-            
-			fmt.Println(string(b))
+
+            for _, showInd := range shows {               
+                b, err2 := json.MarshalIndent(showInd, "", " ")
+                if err2 != nil {
+				    fmt.Println(err2)
+			    }
+                
+			    fmt.Println(string(b))
+            }
+
+
 		case "search":
 			if len(args) > 1 {
 				showResults, err := client.Shows().Search(args[1])

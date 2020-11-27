@@ -51,7 +51,7 @@ func (r *ShowsService) Search(query string) (shows []ShowResult, result *Result)
 
 // Show struct for the Trakt v2 API
 type Show struct {
-	AiredEpisodes int `json:"aired_episodes"`
+/*	AiredEpisodes int `json:"aired_episodes"`
 	Airs          struct {
 		Day      string `json:"day"`
 		Time     string `json:"time"`
@@ -100,12 +100,12 @@ type Show struct {
 	Overview  string  `json:"overview"`
 	Rating    float64 `json:"rating"`
 	Runtime   float64 `json:"runtime"`
-	Status    string  `json:"status"`
+	Status    string  `json:"status"`*/
 	Title     string  `json:"title"`
-	Trailer   string  `json:"trailer"`
+/*	Trailer   string  `json:"trailer"`
 	UpdatedAt string  `json:"updated_at"`
 	Votes     int     `json:"votes"`
-	Year      int     `json:"year"`
+	Year      int     `json:"year"`*/
 }
 
 type ShowResult struct {
