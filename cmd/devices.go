@@ -11,10 +11,15 @@ import (
     "github.com/spf13/cobra"
     "traktTV-cli/trakt"
     "github.com/tj/go-spin"
+    "github.com/hashicorp/vault/api"
+	"os"
 )
 
 const client_id = "88f5df64ae395414edfa783e5a62eaf8718e79d42eee8fe12306db3dd343240e"
 const client_secret = "3b2fdf87b8805e38ce74fe31819d46859b6bfc35aec8262cc7dccbf69ac7debb"
+
+var token = os.Getenv("VAULT_DEV_ROOT_TOKEN_ID")
+var vault_addr = os.Getenv("VAULT_ADDR")
 
 
 type authData struct {
@@ -121,24 +126,39 @@ go func() {
             bodyToken, _ := ioutil.ReadAll(respToken.Body)
 	        respToken.Body.Close()
 
-            var tokenDat tokenData
+            jsonMap := make(map[string]interface{})
+            
 
-            err3 := json.Unmarshal(bodyToken, &tokenDat)
+            err3 := json.Unmarshal(bodyToken, &jsonMap)
             if err3 != nil {
                 fmt.Println(err3)
             }
-            var jsonData []byte
-            
-            jsonData, err := json.Marshal(tokenDat)
+
+            config := &api.Config{
+                Address: vault_addr,
+            }
+            client, err := api.NewClient(config)
             if err != nil {
                 fmt.Println(err)
+                ticker.Stop()
+                done <- true                
+                return
             }
 
-            errj := ioutil.WriteFile("apidata.txt", jsonData, 0644)
-	        if errj != nil {
-		        fmt.Println(err)
-	        }
+            client.SetToken(token)
 
+            secretSal := make(map[string]interface{})
+            secretSal["data"] = jsonMap
+            
+                
+            _,errt := client.Logical().Write("secret/data/token",secretSal)
+            if errt != nil {
+                fmt.Println(errt)
+                ticker.Stop()
+                done <- true
+                return
+            }
+            fmt.Println("")
             fmt.Println("access_token succesfully generated ")
 
             ticker.Stop()
