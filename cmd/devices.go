@@ -18,8 +18,6 @@ import (
 const client_id = "88f5df64ae395414edfa783e5a62eaf8718e79d42eee8fe12306db3dd343240e"
 const client_secret = "3b2fdf87b8805e38ce74fe31819d46859b6bfc35aec8262cc7dccbf69ac7debb"
 
-var token = os.Getenv("VAULT_DEV_ROOT_TOKEN_ID")
-var vault_addr = os.Getenv("VAULT_ADDR")
 
 
 type authData struct {
