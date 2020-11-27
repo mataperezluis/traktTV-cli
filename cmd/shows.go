@@ -47,14 +47,14 @@ var showsCmd = &cobra.Command{
 				fmt.Println(err)
 			}
 
-            for _, showInd := range shows {               
-                b, err2 := json.MarshalIndent(showInd, "", " ")
+              
+                b, err2 := json.MarshalIndent(shows, "", " ")
                 if err2 != nil {
 				    fmt.Println(err2)
 			    }
                 
 			    fmt.Println(string(b))
-            }
+           
 
 
 		case "search":
