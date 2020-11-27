@@ -3,12 +3,12 @@ package cmd
 import (
   "fmt"
   "os"
- // "io/ioutil"
-//  "encoding/json" 
+  "io/ioutil"
+  "encoding/json" 
   "traktTV-cli/trakt"   
 
   "github.com/spf13/cobra"
-  "github.com/hashicorp/vault/api"
+
 )
 
 
@@ -24,43 +24,52 @@ var showsCmd = &cobra.Command{
   Args: cobra.MinimumNArgs(1),
   Run: func(cmd *cobra.Command, args []string) {
 
-    var token = os.Getenv("VAULT_DEV_ROOT_TOKEN_ID")
-    var vault_addr = os.Getenv("VAULT_ADDR")
-        
-    config := &api.Config{
-		Address: vault_addr,
-	}
-	clientVault, err := api.NewClient(config)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-    
-	clientVault.SetToken(token)
-    secret, err := clientVault.Logical().Read("secret/data/token")
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	m, ok := secret.Data["data"].(map[string]interface{})
-	if !ok {
-		fmt.Printf("%T %#v\n", secret.Data["data"], secret.Data["data"])
-		return
-	}  
+    jsonFile, err := os.Open("./apidata.txt")
+    // if we os.Open returns an error then handle it
+    if err != nil {
+        fmt.Println(err)
+    }
 
-    access_token := fmt.Sprintf("%v", m["access_token"])
+    defer jsonFile.Close()
+
+    var tokenDat tokenData
+
+    byteValue, _ := ioutil.ReadAll(jsonFile)
+    json.Unmarshal(byteValue, &tokenDat)
+
+
 
     client := trakt.NewClient(
 		""+client_id+"",
-		trakt.TokenAuth{AccessToken: ""+ access_token +""},
+		trakt.TokenAuth{AccessToken: ""+tokenDat.AccessToken+""},
 	)
 
-    if args[0] == "allpopular"{
+    
+    switch com := args[0]; com {
+   
+    case "allpopular":
         shows, err := client.Shows().AllPopular()
             if err != nil {
                 fmt.Println(err)
             }
 	    fmt.Println(shows)
+    case "search":
+        if len(args) > 1 {
+        showResults, err := client.Shows().Search(args[1])
+            if err != nil {
+                fmt.Println(err)
+            }
+        for _, showResult := range showResults {
+            fmt.Println(showResult.Show)
+        }
+        }else
+        {   
+          fmt.Println("correct use: search \"name of the show\"")  
+        }
+    default:
+        fmt.Println("commands")
+        fmt.Println("allpopular")
+        fmt.Println("search \"name of the show\"")
     }
 
   },

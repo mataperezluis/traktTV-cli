@@ -11,8 +11,8 @@ import (
     "github.com/spf13/cobra"
     "traktTV-cli/trakt"
     "github.com/tj/go-spin"
-    "github.com/hashicorp/vault/api"
-	"os"
+    "os"
+
 )
 
 const client_id = "88f5df64ae395414edfa783e5a62eaf8718e79d42eee8fe12306db3dd343240e"
@@ -28,6 +28,15 @@ type authData struct {
 	VerificationURL string `json:"verification_url"`
 	ExpiresIn       int    `json:"expires_in"`
 	Interval        int    `json:"interval"`
+}
+
+type tokenData struct {
+	AccessToken  string `json:"access_token"`
+	TokenType    string `json:"token_type"`
+	ExpiresIn    int    `json:"expires_in"`
+	RefreshToken string `json:"refresh_token"`
+	Scope        string `json:"scope"`
+	CreatedAt    int    `json:"created_at"`
 }
 
 func init() {
@@ -117,39 +126,24 @@ go func() {
             bodyToken, _ := ioutil.ReadAll(respToken.Body)
 	        respToken.Body.Close()
 
-            jsonMap := make(map[string]interface{})
-            
+           var tokenDat tokenData
 
-            err3 := json.Unmarshal(bodyToken, &jsonMap)
+            err3 := json.Unmarshal(bodyToken, &tokenDat)
             if err3 != nil {
                 fmt.Println(err3)
             }
-
-            config := &api.Config{
-                Address: vault_addr,
-            }
-            client, err := api.NewClient(config)
+            var jsonData []byte
+            
+            jsonData, err := json.Marshal(tokenDat)
             if err != nil {
                 fmt.Println(err)
-                ticker.Stop()
-                done <- true                
-                return
             }
 
-            client.SetToken(token)
+            errj := ioutil.WriteFile("apidata.txt", jsonData, 0644)
+	        if errj != nil {
+		        fmt.Println(err)
+	        }
 
-            secretSal := make(map[string]interface{})
-            secretSal["data"] = jsonMap
-            
-                
-            _,errt := client.Logical().Write("secret/data/token",secretSal)
-            if errt != nil {
-                fmt.Println(errt)
-                ticker.Stop()
-                done <- true
-                return
-            }
-            fmt.Println("")
             fmt.Println("access_token succesfully generated ")
 
             ticker.Stop()
