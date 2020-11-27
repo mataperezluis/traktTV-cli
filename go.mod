@@ -9,5 +9,4 @@ require (
 	github.com/spf13/cobra v1.1.1
 	github.com/spf13/viper v1.7.1
     github.com/tj/go-spin  v1.1.0
-    github.com/hashicorp/vault/api v1.0.4 
 )
