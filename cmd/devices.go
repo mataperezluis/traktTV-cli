@@ -11,7 +11,6 @@ import (
     "github.com/spf13/cobra"
     "traktTV-cli/trakt"
     "github.com/tj/go-spin"
-    "os"
 
 )
 

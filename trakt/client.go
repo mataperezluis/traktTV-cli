@@ -6,6 +6,10 @@ import (
 	"net/url"
 	"strings"
 
+	/* "io/ioutil"
+	   "fmt"
+	   "encoding/json"*/
+
 	"github.com/jingweno/go-sawyer"
 	"github.com/jingweno/go-sawyer/hypermedia"
 )
@@ -111,6 +115,7 @@ func (c *Client) applyRequestHeaders(req *Request) {
 	req.Header.Set("User-Agent", c.UserAgent)
 	req.Header.Set("trakt-api-version", TraktAPIVersion)
 	req.Header.Set("trakt-api-key", c.ApiKey)
+	req.Header.Set("Content-Type", "application/json")
 
 	if tokenAuth, ok := c.AuthMethod.(TokenAuth); ok {
 		req.Header.Set("Authorization", tokenAuth.String())
@@ -135,6 +140,7 @@ func sendRequest(c *Client, url *url.URL, fn func(r *Request) (*Response, error)
 	}
 
 	resp, err := fn(req)
+
 	result = newResult(resp, err)
 
 	return

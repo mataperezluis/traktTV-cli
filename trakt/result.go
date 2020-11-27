@@ -1,5 +1,6 @@
 package trakt
 
+
 type pageable struct {
 	NextPage  *Hyperlink
 	LastPage  *Hyperlink
