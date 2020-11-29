@@ -70,34 +70,35 @@ var showsCmd = &cobra.Command{
 			    fmt.Println(string(b))
 
         case "recommended":
-			if len(args) > 1 {
-                if args[1]=="daily" || args[1]=="weekly" || args[1]=="monthly" || args[1]=="yearly" || args[1]=="all"{
-				    showResults, err := client.Shows().Recommended(args[1])
-				    if err != nil {
-					    fmt.Println(err)
-				    }
-                    b, err2 := json.MarshalIndent(showResults, "", " ")
-                    if err2 != nil {
-				        fmt.Println(err2)
-			        }
-                    
-			        fmt.Println(string(b))                
-                        
-				    /*for _, showResult := range showResults {
-					    fmt.Println(showResult.Show)
-				    }*/
-                }else
-                {       
-                    fmt.Println("available periods:  daily , weekly , monthly , yearly , all") 
-                }
-			} else {
-				fmt.Println("correct use: recommended [period]")
-                fmt.Println("available periods:  daily , weekly , monthly , yearly , all")    
+			if !(len(args) > 1) {
+                args=append(args, "weekly")     
 			}
+            if args[1]!="daily" && args[1]!="weekly" && args[1]!="monthly" && args[1]!="yearly" && args[1]!="all"{
+                    args[1]="weekly"    
+            }
+			    showResults, err := client.Shows().Recommended(args[1])
+			    if err != nil {
+				    fmt.Println(err)
+			    }
+                b, err2 := json.MarshalIndent(showResults, "", " ")
+                if err2 != nil {
+			        fmt.Println(err2)
+		        }
+                
+		        fmt.Println(string(b))                
+                    
+            
+			
 
         case "played":
-			if len(args) > 1 {
-                if args[1]=="daily" || args[1]=="weekly" || args[1]=="monthly" || args[1]=="yearly" || args[1]=="all"{
+			
+            if !(len(args) > 1) {
+				 args=append(args, "weekly")          
+			}
+            if args[1]!="daily" && args[1]!="weekly" && args[1]!="monthly" && args[1]!="yearly" && args[1]!="all"{
+                    args[1]="weekly"    
+            }
+
 				    showResults, err := client.Shows().Played(args[1])
 				    if err != nil {
 					    fmt.Println(err)
@@ -109,21 +110,15 @@ var showsCmd = &cobra.Command{
                     
 			        fmt.Println(string(b))                
                         
-				    /*for _, showResult := range showResults {
-					    fmt.Println(showResult.Show)
-				    }*/
-                }else
-                {       
-                    fmt.Println("available periods:  daily , weekly , monthly , yearly , all") 
-                }
-			} else {
-				fmt.Println("correct use: played [period]")
-                fmt.Println("available periods:  daily , weekly , monthly , yearly , all")    
-			}
+
 
         case "watched":
-			if len(args) > 1 {
-                if args[1]=="daily" || args[1]=="weekly" || args[1]=="monthly" || args[1]=="yearly" || args[1]=="all"{
+			if !(len(args) > 1) {
+				 args=append(args, "weekly")         
+			}
+            if args[1]!="daily" && args[1]!="weekly" && args[1]!="monthly" && args[1]!="yearly" && args[1]!="all"{
+                    args[1]="weekly"    
+            }
 				    showResults, err := client.Shows().Watched(args[1])
 				    if err != nil {
 					    fmt.Println(err)
@@ -135,21 +130,14 @@ var showsCmd = &cobra.Command{
                     
 			        fmt.Println(string(b))                
                         
-				    /*for _, showResult := range showResults {
-					    fmt.Println(showResult.Show)
-				    }*/
-                }else
-                {       
-                    fmt.Println("available periods:  daily , weekly , monthly , yearly , all") 
-                }
-			} else {
-				fmt.Println("correct use: watched [period]")
-                fmt.Println("available periods:  daily , weekly , monthly , yearly , all")    
-			}
 
         case "collected":
-			if len(args) > 1 {
-                if args[1]=="daily" || args[1]=="weekly" || args[1]=="monthly" || args[1]=="yearly" || args[1]=="all"{
+			if !(len(args) > 1) {
+				 args=append(args, "weekly")          
+			}
+            if args[1]!="daily" && args[1]!="weekly" && args[1]!="monthly" && args[1]!="yearly" && args[1]!="all"{
+                    args[1]="weekly"    
+            }
 				    showResults, err := client.Shows().Collected(args[1])
 				    if err != nil {
 					    fmt.Println(err)
@@ -161,17 +149,6 @@ var showsCmd = &cobra.Command{
                     
 			        fmt.Println(string(b))                
                         
-				    /*for _, showResult := range showResults {
-					    fmt.Println(showResult.Show)
-				    }*/
-                }else
-                {       
-                    fmt.Println("available periods:  daily , weekly , monthly , yearly , all") 
-                }
-			} else {
-				fmt.Println("correct use: collected [period]")
-                fmt.Println("available periods:  daily , weekly , monthly , yearly , all")    
-			}
 
         case "anticipated":
 			shows, err := client.Shows().Anticipated()
