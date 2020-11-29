@@ -1,7 +1,6 @@
 package trakt
 
 import (
-	"fmt"
 	"time"
 )
 
@@ -19,6 +18,8 @@ var (
 	ShowsSearchURL  = Hyperlink("search?query={query}&type=show")
 	ShowAliasURL    = Hyperlink("shows/{traktID}/aliases")
 	ShowCertificationsURL    = Hyperlink("shows/{traktID}/certifications")	
+	ShowTranslationsURL    = Hyperlink("shows/{traktID}/translations/{lang}")	
+	ShowCommentsURL    = Hyperlink("shows/{traktID}/comments/{sort}")
 	ShowsByIDURL    = Hyperlink("search?id_type={id_type}&id={id}&type=show")
 )
 
@@ -34,20 +35,32 @@ type ShowsService struct {
 
 // One returns a single show identified by a Trakt ID. It also returns a Result
 // object to inspect the returned response of the server.
-func (r *ShowsService) One(traktID int) (show *Show, result *Result) {
-	url, _ := ShowURL.Expand(M{"traktID": fmt.Sprintf("%d", traktID)})
+func (r *ShowsService) One(traktID string) (show *Show, result *Result) {
+	url, _ := ShowURL.Expand(M{"traktID":traktID})
 	result = r.client.get(url, &show)
 	return
 }
 
-func (r *ShowsService) Alias(traktID int) (show *ShowAlias, result *Result) {
-	url, _ := ShowAliasURL.Expand(M{"traktID": fmt.Sprintf("%d", traktID)})
+func (r *ShowsService) Alias(traktID string) (show *ShowAlias, result *Result) {
+	url, _ := ShowAliasURL.Expand(M{"traktID": traktID})
 	result = r.client.get(url, &show)
 	return
 }
 
-func (r *ShowsService) Certifications(traktID int) (show *ShowCert, result *Result) {
-	url, _ := ShowCertificationsURL.Expand(M{"traktID": fmt.Sprintf("%d", traktID)})
+func (r *ShowsService) Certifications(traktID string) (show *ShowCert, result *Result) {
+	url, _ := ShowCertificationsURL.Expand(M{"traktID": traktID})
+	result = r.client.get(url, &show)
+	return
+}
+
+func (r *ShowsService) Translations(traktID string, lang string) (show *ShowTranslations, result *Result) {
+	url, _ := ShowTranslationsURL.Expand(M{"traktID": traktID,"lang": lang})
+	result = r.client.get(url, &show)
+	return
+}
+
+func (r *ShowsService) Comments(traktID string, sort string) (show *ShowComment, result *Result) {
+	url, _ := ShowCommentsURL.Expand(M{"traktID": traktID,"sort": sort})
 	result = r.client.get(url, &show)
 	return
 }
@@ -194,6 +207,12 @@ type ShowAnticipated struct {
 	Show     ShowData `json:"show"`
 }
 
+type ShowTranslations []struct {
+	Title    string `json:"title"`
+	Overview string `json:"overview"`
+	Language string `json:"language"`
+}
+
 type ShowTrending struct {
 	Watchers int  `json:"watchers"`
 	Show     ShowData `json:"show"`
@@ -245,4 +264,31 @@ type ShowResult struct {
 	Score float64 `json:"score"`
 	Show  *Show   `json:"show"`
 	Type  string  `json:"type"`
+}
+
+type ShowComment []struct {
+	ID        int       `json:"id"`
+	ParentID  int       `json:"parent_id"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+	Comment   string    `json:"comment"`
+	Spoiler   bool      `json:"spoiler"`
+	Review    bool      `json:"review"`
+	Replies   int       `json:"replies"`
+	Likes     int       `json:"likes"`
+	UserStats struct {
+		Rating         int `json:"rating"`
+		PlayCount      int `json:"play_count"`
+		CompletedCount int `json:"completed_count"`
+	} `json:"user_stats"`
+	User struct {
+		Username string `json:"username"`
+		Private  bool   `json:"private"`
+		Name     string `json:"name"`
+		Vip      bool   `json:"vip"`
+		VipEp    bool   `json:"vip_ep"`
+		Ids      struct {
+			Slug string `json:"slug"`
+		} `json:"ids"`
+	} `json:"user"`
 }

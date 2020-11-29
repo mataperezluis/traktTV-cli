@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"os"
 	"traktTV-cli/trakt"
-	"strconv"	
 
 	"github.com/spf13/cobra"
 )
@@ -198,8 +197,7 @@ var showsCmd = &cobra.Command{
 
 		case "one":
 			if len(args) > 1 {
-				traktID,_:=strconv.Atoi(args[1])
-				showResults, err := client.Shows().One(traktID)
+				showResults, err := client.Shows().One(args[1])
 				if err != nil {
 					fmt.Println(err)
 				}
@@ -216,8 +214,7 @@ var showsCmd = &cobra.Command{
 		
 		case "alias":
 			if len(args) > 1 {
-				traktID,_:=strconv.Atoi(args[1])
-				showResults, err := client.Shows().Alias(traktID)
+				showResults, err := client.Shows().Alias(args[1])
 				if err != nil {
 					fmt.Println(err)
 				}
@@ -234,8 +231,7 @@ var showsCmd = &cobra.Command{
 
 		case "certifications":
 			if len(args) > 1 {
-				traktID,_:=strconv.Atoi(args[1])
-				showResults, err := client.Shows().Certifications(traktID)
+				showResults, err := client.Shows().Certifications(args[1])
 				if err != nil {
 					fmt.Println(err)
 				}
@@ -248,6 +244,50 @@ var showsCmd = &cobra.Command{
                     
 			} else {
 				fmt.Println("correct use: certifications [Trakt ID, Trakt slug, or IMDB ID]")
+			}
+		case "translations":
+			if len(args) > 1 {
+				languageData:=""
+				if len(args) > 2{
+					languageData=args[2]
+				}
+				showResults, err := client.Shows().Translations(args[1],languageData)
+				if err != nil {
+					fmt.Println(err)
+				}
+                b, err2 := json.MarshalIndent(showResults, "", " ")
+                if err2 != nil {
+				    fmt.Println(err2)
+			    }
+                
+			    fmt.Println(string(b))                
+                    
+			} else {
+				fmt.Println("correct use: translations [Trakt ID, Trakt slug, or IMDB ID] [language]")
+			}
+
+		case "comments":
+			if len(args) > 1 {
+				sortData:=""
+				if !(len(args) > 2) {
+					args=append(args, "newest")          
+				}
+				if args[2]!="newest" && args[2]!="oldest" && args[2]!="likes" &&  args[2]!="replies" &&  args[2]!="highest" && args[2]!="lowest" && args[2]!="plays" && args[2]!="watched"{
+						args[1]="newest"    
+				}
+				showResults, err := client.Shows().Comments(args[1],sortData)
+				if err != nil {
+					fmt.Println(err)
+				}
+                b, err2 := json.MarshalIndent(showResults, "", " ")
+                if err2 != nil {
+				    fmt.Println(err2)
+			    }
+                
+			    fmt.Println(string(b))                
+                    
+			} else {
+				fmt.Println("correct use: translations [Trakt ID, Trakt slug, or IMDB ID] [language]")
 			}
 
 
@@ -280,6 +320,7 @@ var showsCmd = &cobra.Command{
 			fmt.Println("  one [Trakt ID, Trakt slug, or IMDB ID]")
 			fmt.Println("  alias [Trakt ID, Trakt slug, or IMDB ID]")
 			fmt.Println("  certifications [Trakt ID, Trakt slug, or IMDB ID]")
+			fmt.Println("  translations [Trakt ID, Trakt slug, or IMDB ID] [language]")	
 		}
 
 	},
