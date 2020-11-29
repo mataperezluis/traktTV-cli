@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"traktTV-cli/trakt"
+	"strconv"	
 
 	"github.com/spf13/cobra"
 )
@@ -87,8 +88,6 @@ var showsCmd = &cobra.Command{
                 
 		        fmt.Println(string(b))                
                     
-            
-			
 
         case "played":
 			
@@ -162,7 +161,94 @@ var showsCmd = &cobra.Command{
 				    fmt.Println(err2)
 			    }
                 
-			    fmt.Println(string(b))
+				fmt.Println(string(b))
+				
+		case "updates":
+			if len(args) > 1 {
+				showResults, err := client.Shows().Updates(args[1])
+				if err != nil {
+					fmt.Println(err)
+				}
+				b, err2 := json.MarshalIndent(showResults, "", " ")
+				if err2 != nil {
+					fmt.Println(err2)
+				}
+				
+				fmt.Println(string(b))                
+					
+			} else {
+				fmt.Println("correct use: updates date time (example:2020-11-27T00:00:00Z)")
+			}
+		case "updates-id":
+			if len(args) > 1 {
+				showResults, err := client.Shows().UpdatesId(args[1])
+				if err != nil {
+					fmt.Println(err)
+				}
+				b, err2 := json.MarshalIndent(showResults, "", " ")
+				if err2 != nil {
+					fmt.Println(err2)
+				}
+				
+				fmt.Println(string(b))                
+					
+			} else {
+				fmt.Println("correct use: updates-id date/time (example:2020-11-27T00:00:00Z)")
+			}
+
+		case "one":
+			if len(args) > 1 {
+				traktID,_:=strconv.Atoi(args[1])
+				showResults, err := client.Shows().One(traktID)
+				if err != nil {
+					fmt.Println(err)
+				}
+                b, err2 := json.MarshalIndent(showResults, "", " ")
+                if err2 != nil {
+				    fmt.Println(err2)
+			    }
+                
+			    fmt.Println(string(b))                
+                    
+			} else {
+				fmt.Println("correct use: one [Trakt ID, Trakt slug, or IMDB ID]")
+			}
+		
+		case "alias":
+			if len(args) > 1 {
+				traktID,_:=strconv.Atoi(args[1])
+				showResults, err := client.Shows().Alias(traktID)
+				if err != nil {
+					fmt.Println(err)
+				}
+                b, err2 := json.MarshalIndent(showResults, "", " ")
+                if err2 != nil {
+				    fmt.Println(err2)
+			    }
+                
+			    fmt.Println(string(b))                
+                    
+			} else {
+				fmt.Println("correct use: alias [Trakt ID, Trakt slug, or IMDB ID]")
+			}
+
+		case "certifications":
+			if len(args) > 1 {
+				traktID,_:=strconv.Atoi(args[1])
+				showResults, err := client.Shows().Certifications(traktID)
+				if err != nil {
+					fmt.Println(err)
+				}
+                b, err2 := json.MarshalIndent(showResults, "", " ")
+                if err2 != nil {
+				    fmt.Println(err2)
+			    }
+                
+			    fmt.Println(string(b))                
+                    
+			} else {
+				fmt.Println("correct use: certifications [Trakt ID, Trakt slug, or IMDB ID]")
+			}
 
 
 		case "search":
@@ -178,9 +264,6 @@ var showsCmd = &cobra.Command{
                 
 			    fmt.Println(string(b))                
                     
-				/*for _, showResult := range showResults {
-					fmt.Println(showResult.Show)
-				}*/
 			} else {
 				fmt.Println("correct use: search \"name of the show\"")
 			}
@@ -192,7 +275,11 @@ var showsCmd = &cobra.Command{
             fmt.Println("  recommended [period], periods:  daily , weekly , monthly , yearly , all")
             fmt.Println("  played [period], periods:  daily , weekly , monthly , yearly , all")
             fmt.Println("  watched [period], periods:  daily , weekly , monthly , yearly , all")
-            fmt.Println("  collected [period], periods:  daily , weekly , monthly , yearly , all")
+			fmt.Println("  collected [period], periods:  daily , weekly , monthly , yearly , all")
+			fmt.Println("  updates [date_start], Example: 2020-11-27T00:00:00Z")	
+			fmt.Println("  one [Trakt ID, Trakt slug, or IMDB ID]")
+			fmt.Println("  alias [Trakt ID, Trakt slug, or IMDB ID]")
+			fmt.Println("  certifications [Trakt ID, Trakt slug, or IMDB ID]")
 		}
 
 	},

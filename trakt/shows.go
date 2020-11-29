@@ -1,6 +1,9 @@
 package trakt
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 var (
 	ShowURL         = Hyperlink("shows/{traktID}")
@@ -10,8 +13,12 @@ var (
     ShowsPlayedURL = Hyperlink("shows/played/{period}")
     ShowsWatchedURL = Hyperlink("shows/watched/{period}")
     ShowsCollectedURL = Hyperlink("shows/collected/{period}")
-    ShowsAnticipatedURL = Hyperlink("shows/anticipated")
+	ShowsAnticipatedURL = Hyperlink("shows/anticipated")
+	ShowsUpdatesURL = Hyperlink("shows/updates/{start_date}")
+	ShowsUpdatesIdURL = Hyperlink("shows/updates/id/{start_date}")	
 	ShowsSearchURL  = Hyperlink("search?query={query}&type=show")
+	ShowAliasURL    = Hyperlink("shows/{traktID}/aliases")
+	ShowCertificationsURL    = Hyperlink("shows/{traktID}/certifications")	
 	ShowsByIDURL    = Hyperlink("search?id_type={id_type}&id={id}&type=show")
 )
 
@@ -29,6 +36,18 @@ type ShowsService struct {
 // object to inspect the returned response of the server.
 func (r *ShowsService) One(traktID int) (show *Show, result *Result) {
 	url, _ := ShowURL.Expand(M{"traktID": fmt.Sprintf("%d", traktID)})
+	result = r.client.get(url, &show)
+	return
+}
+
+func (r *ShowsService) Alias(traktID int) (show *ShowAlias, result *Result) {
+	url, _ := ShowAliasURL.Expand(M{"traktID": fmt.Sprintf("%d", traktID)})
+	result = r.client.get(url, &show)
+	return
+}
+
+func (r *ShowsService) Certifications(traktID int) (show *ShowCert, result *Result) {
+	url, _ := ShowCertificationsURL.Expand(M{"traktID": fmt.Sprintf("%d", traktID)})
 	result = r.client.get(url, &show)
 	return
 }
@@ -82,6 +101,18 @@ func (r *ShowsService) Collected(period string) (shows []ShowPlayed, result *Res
 func (r *ShowsService) Anticipated() (shows []ShowAnticipated, result *Result) {
 	url, _ := ShowsAnticipatedURL.Expand(M{})
 	result = r.client.get(url, &shows)
+	return
+}
+
+func (r *ShowsService) Updates(startDate string) (shows []ShowUpdate, result *Result) {
+	url, _ := ShowsUpdatesURL.Expand(M{"start_date": startDate})
+	result = r.client.get(url, &shows)
+	return
+}
+
+func (r *ShowsService) UpdatesId(startDate string) (showsId UpdatesIdval, result *Result) {
+	url, _ := ShowsUpdatesIdURL.Expand(M{"start_date": startDate})
+	result = r.client.get(url, &showsId)
 	return
 }
 
@@ -151,6 +182,8 @@ type Show struct {
 	Year      int     `json:"year"`
 }
 
+type UpdatesIdval []int
+
 type ShowRecommended struct {
 	UserCount int  `json:"user_count"`
 	Show     ShowData `json:"show"`
@@ -165,6 +198,10 @@ type ShowTrending struct {
 	Watchers int  `json:"watchers"`
 	Show     ShowData `json:"show"`
 }
+type ShowUpdate struct {
+	UpdatedAt time.Time `json:"updated_at"`
+	Show     ShowData `json:"show"`
+}
 
 type ShowPlayed struct {
 	WatcherCount   int  `json:"watcher_count"`
@@ -172,6 +209,17 @@ type ShowPlayed struct {
 	CollectedCount int  `json:"collected_count"`
 	CollectorCount int  `json:"collector_count"`
 	Show           ShowData `json:"show"`
+}
+
+type ShowAlias []struct {
+	Title   string `json:"title"`
+	Country string `json:"country"`
+}
+
+	
+type ShowCert []struct {
+	Certification string `json:"certification"`
+	Country       string `json:"country"`
 }
 
 type Ids struct {
