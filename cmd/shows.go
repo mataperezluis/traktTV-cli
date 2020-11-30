@@ -268,14 +268,14 @@ var showsCmd = &cobra.Command{
 
 		case "comments":
 			if len(args) > 1 {
-				sortData:=""
+				
 				if !(len(args) > 2) {
 					args=append(args, "newest")          
 				}
 				if args[2]!="newest" && args[2]!="oldest" && args[2]!="likes" &&  args[2]!="replies" &&  args[2]!="highest" && args[2]!="lowest" && args[2]!="plays" && args[2]!="watched"{
-						args[1]="newest"    
+						args[2]="newest"    
 				}
-				showResults, err := client.Shows().Comments(args[1],sortData)
+				showResults, err := client.Shows().Comments(args[1],args[2])
 				if err != nil {
 					fmt.Println(err)
 				}
@@ -287,8 +287,155 @@ var showsCmd = &cobra.Command{
 			    fmt.Println(string(b))                
                     
 			} else {
-				fmt.Println("correct use: translations [Trakt ID, Trakt slug, or IMDB ID] [language]")
+				fmt.Println("correct use: comments [Trakt ID, Trakt slug, or IMDB ID] [sort]")
 			}
+		
+		case "lists":
+			if len(args) > 1 {
+				if !(len(args) > 2) {
+					args=append(args, "personal")          
+				}
+				if !(len(args) > 3) {
+					args=append(args, "popular")          
+				}
+				if args[2]!="personal" && args[2]!="official" && args[2]!="watchlists" &&  args[2]!="recommendations" &&  args[2]!="all"{
+						args[2]="personal"    
+				}
+				if args[3]!="likes" && args[3]!="likes" && args[3]!="comments" &&  args[3]!="items" &&  args[3]!="added" &&  args[3]!="updated"{
+					args[3]="popular"    
+				}	
+				showResults, err := client.Shows().List(args[1],args[2],args[3])
+				if err != nil {
+					fmt.Println(err)
+				}
+                b, err2 := json.MarshalIndent(showResults, "", " ")
+                if err2 != nil {
+				    fmt.Println(err2)
+			    }
+                
+			    fmt.Println(string(b))                
+                    
+			} else {
+				fmt.Println("correct use: lists [Trakt ID, Trakt slug, or IMDB ID] [type] [sort]")
+			}
+
+		case "people":
+			if len(args) > 1 {
+				showResults, err := client.Shows().People(args[1])
+				if err != nil {
+					fmt.Println(err)
+				}
+                b, err2 := json.MarshalIndent(showResults, "", " ")
+                if err2 != nil {
+				    fmt.Println(err2)
+			    }
+                
+			    fmt.Println(string(b))                
+                    
+			} else {
+				fmt.Println("correct use: people [Trakt ID, Trakt slug, or IMDB ID]")
+			}
+		
+		case "ratings":
+			if len(args) > 1 {
+				showResults, err := client.Shows().Ratings(args[1])
+				if err != nil {
+					fmt.Println(err)
+				}
+                b, err2 := json.MarshalIndent(showResults, "", " ")
+                if err2 != nil {
+				    fmt.Println(err2)
+			    }
+                
+			    fmt.Println(string(b))                
+                    
+			} else {
+				fmt.Println("correct use: ratings [Trakt ID, Trakt slug, or IMDB ID]")
+			}
+		case "related":
+			if len(args) > 1 {
+				showResults, err := client.Shows().Related(args[1])
+				if err != nil {
+					fmt.Println(err)
+				}
+                b, err2 := json.MarshalIndent(showResults, "", " ")
+                if err2 != nil {
+				    fmt.Println(err2)
+			    }
+                
+			    fmt.Println(string(b))                
+                    
+			} else {
+				fmt.Println("correct use: related [Trakt ID, Trakt slug, or IMDB ID]")
+			}
+		
+		case "stats":
+			if len(args) > 1 {
+				showResults, err := client.Shows().Stats(args[1])
+				if err != nil {
+					fmt.Println(err)
+				}
+                b, err2 := json.MarshalIndent(showResults, "", " ")
+                if err2 != nil {
+				    fmt.Println(err2)
+			    }
+                
+			    fmt.Println(string(b))                
+                    
+			} else {
+				fmt.Println("correct use: stats [Trakt ID, Trakt slug, or IMDB ID]")
+			}
+		
+		case "watching":
+			if len(args) > 1 {
+				showResults, err := client.Shows().Watching(args[1])
+				if err != nil {
+					fmt.Println(err)
+				}
+                b, err2 := json.MarshalIndent(showResults, "", " ")
+                if err2 != nil {
+				    fmt.Println(err2)
+			    }
+                
+			    fmt.Println(string(b))                
+                    
+			} else {
+				fmt.Println("correct use: watching [Trakt ID, Trakt slug, or IMDB ID]")
+			}
+		
+		case "next-episode":
+			if len(args) > 1 {
+				showResults, err := client.Shows().NextEpisode(args[1])
+				if err != nil {
+					fmt.Println(err)
+				}
+                b, err2 := json.MarshalIndent(showResults, "", " ")
+                if err2 != nil {
+				    fmt.Println(err2)
+			    }
+                
+			    fmt.Println(string(b))                
+                    
+			} else {
+				fmt.Println("correct use: next-episode [Trakt ID, Trakt slug, or IMDB ID]")
+			}
+		case "last-episode":
+			if len(args) > 1 {
+				showResults, err := client.Shows().LastEpisode(args[1])
+				if err != nil {
+					fmt.Println(err)
+				}
+                b, err2 := json.MarshalIndent(showResults, "", " ")
+                if err2 != nil {
+				    fmt.Println(err2)
+			    }
+                
+			    fmt.Println(string(b))                
+                    
+			} else {
+				fmt.Println("correct use: last-episode [Trakt ID, Trakt slug, or IMDB ID]")
+			}
+
 
 
 		case "search":
@@ -321,6 +468,11 @@ var showsCmd = &cobra.Command{
 			fmt.Println("  alias [Trakt ID, Trakt slug, or IMDB ID]")
 			fmt.Println("  certifications [Trakt ID, Trakt slug, or IMDB ID]")
 			fmt.Println("  translations [Trakt ID, Trakt slug, or IMDB ID] [language]")	
+			fmt.Println("  comments [Trakt ID, Trakt slug, or IMDB ID] [sort]")
+			fmt.Println("  lists [Trakt ID, Trakt slug, or IMDB ID] [type] [sort]")
+			fmt.Println("  people [Trakt ID, Trakt slug, or IMDB ID]")
+			fmt.Println("  ratings [Trakt ID, Trakt slug, or IMDB ID]")
+			fmt.Println("  stats [Trakt ID, Trakt slug, or IMDB ID]")
 		}
 
 	},
