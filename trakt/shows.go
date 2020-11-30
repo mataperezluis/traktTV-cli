@@ -28,6 +28,8 @@ var (
 	ShowWatchingURL    = Hyperlink("shows/{traktID}/watching")
 	ShowNextEpURL    = Hyperlink("shows/{traktID}/next_episode")
 	ShowLastEpURL    = Hyperlink("shows/{traktID}/last_episode")
+	ShowProgressURL = Hyperlink("shows/{traktID}/progress/collection?hidden={hiddenB}&specials={specialsB}&count_specials={count_specialsB}")
+	ShowWatchedProgressURL = Hyperlink("shows/{traktID}/progress/watched?hidden={hiddenB}&specials={specialsB}&count_specials={count_specialsB}")
 	ShowsByIDURL    = Hyperlink("search?id_type={id_type}&id={id}&type=show")
 )
 
@@ -78,6 +80,20 @@ func (r *ShowsService) List(traktID string, tipo string,sort string) (show *Show
 	result = r.client.get(url, &show)
 	return
 }
+
+func (r *ShowsService) CollectionProgress(traktID string, hiddenB string, specialB string, count_specialsB string) (show *ShowProgress, result *Result) {
+	url, _ := ShowProgressURL.Expand(M{"traktID": traktID,"hiddenB":hiddenB,"specialsB": specialB,"count_specialsB":count_specialsB})
+	result = r.client.get(url, &show)
+	return
+}
+
+func (r *ShowsService) WatchedProgress(traktID string, hiddenB string, specialB string, count_specialsB string) (show *ShowProgress, result *Result) {
+	url, _ := ShowWatchedProgressURL.Expand(M{"traktID": traktID,"hiddenB":hiddenB,"specialsB": specialB,"count_specialsB":count_specialsB})
+	result = r.client.get(url, &show)
+	return
+}
+
+
 
 func (r *ShowsService) People(traktID string) (show *ShowCast, result *Result) {
 	url, _ := ShowPeopleURL.Expand(M{"traktID": traktID})
@@ -413,6 +429,53 @@ type ShowNext struct {
 	Number int    `json:"number"`
 	Title  string `json:"title"`
 	Ids    Ids `json:"ids"`
+}
+
+type ShowProgress struct {
+	Aired           int       `json:"aired"`
+	Completed       int       `json:"completed"`
+	LastCollectedAt time.Time `json:"last_collected_at"`
+	Seasons         []struct {
+		Number    int    `json:"number"`
+		Title     string `json:"title"`
+		Aired     int    `json:"aired"`
+		Completed int    `json:"completed"`
+		Episodes  []struct {
+			Number      int       `json:"number"`
+			Completed   bool      `json:"completed"`
+			CollectedAt time.Time `json:"collected_at"`
+		} `json:"episodes"`
+	} `json:"seasons"`
+	HiddenSeasons []struct {
+		Number int `json:"number"`
+		Ids    struct {
+			Trakt int `json:"trakt"`
+			Tvdb  int `json:"tvdb"`
+			Tmdb  int `json:"tmdb"`
+		} `json:"ids"`
+	} `json:"hidden_seasons"`
+	NextEpisode struct {
+		Season int    `json:"season"`
+		Number int    `json:"number"`
+		Title  string `json:"title"`
+		Ids    struct {
+			Trakt int         `json:"trakt"`
+			Tvdb  int         `json:"tvdb"`
+			Imdb  interface{} `json:"imdb"`
+			Tmdb  interface{} `json:"tmdb"`
+		} `json:"ids"`
+	} `json:"next_episode"`
+	LastEpisode struct {
+		Season int    `json:"season"`
+		Number int    `json:"number"`
+		Title  string `json:"title"`
+		Ids    struct {
+			Trakt int         `json:"trakt"`
+			Tvdb  int         `json:"tvdb"`
+			Imdb  interface{} `json:"imdb"`
+			Tmdb  interface{} `json:"tmdb"`
+		} `json:"ids"`
+	} `json:"last_episode"`
 }
 
 //------------------------cast struct -------------------------------------

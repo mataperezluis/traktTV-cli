@@ -318,6 +318,72 @@ var showsCmd = &cobra.Command{
 			} else {
 				fmt.Println("correct use: lists [Trakt ID, Trakt slug, or IMDB ID] [type] [sort]")
 			}
+		case "collection-progress":
+			if len(args) > 1 {
+				hidden:="false"
+				specials:="false"
+				count_specials:="false"
+
+				for _,x:= range args{
+					if x == "hidden"{
+						hidden="true"
+					}else if x == "specials"{
+						specials="true"
+					}else if x == "count_specials"{
+						count_specials="true"
+					}
+
+				}
+
+				showResults, err := client.Shows().CollectionProgress(args[1],hidden,specials,count_specials)
+				if err != nil {
+					fmt.Println(err)
+				}
+                b, err2 := json.MarshalIndent(showResults, "", " ")
+                if err2 != nil {
+				    fmt.Println(err2)
+			    }
+                
+				fmt.Println(string(b))                
+                    
+			} else {
+				fmt.Println("correct use: collection-progress [Trakt ID, Trakt slug, or IMDB ID] optionals: ")
+				fmt.Println("hidden specials count_specials")
+			}
+		
+		case "watched-progress":
+			if len(args) > 1 {
+				hidden:="false"
+				specials:="false"
+				count_specials:="false"
+
+				for _,x:= range args{
+					if x == "hidden"{
+						hidden="true"
+					}else if x == "specials"{
+						specials="true"
+					}else if x == "count_specials"{
+						count_specials="true"
+					}
+
+				}
+
+				showResults, err := client.Shows().WatchedProgress(args[1],hidden,specials,count_specials)
+				if err != nil {
+					fmt.Println(err)
+				}
+                b, err2 := json.MarshalIndent(showResults, "", " ")
+                if err2 != nil {
+				    fmt.Println(err2)
+			    }
+                
+				fmt.Println(string(b))                
+                    
+			} else {
+				fmt.Println("correct use: watched-progress [Trakt ID, Trakt slug, or IMDB ID] optionals: ")
+				fmt.Println("hidden specials count_specials")
+			}
+		
 
 		case "people":
 			if len(args) > 1 {
@@ -473,6 +539,12 @@ var showsCmd = &cobra.Command{
 			fmt.Println("  people [Trakt ID, Trakt slug, or IMDB ID]")
 			fmt.Println("  ratings [Trakt ID, Trakt slug, or IMDB ID]")
 			fmt.Println("  stats [Trakt ID, Trakt slug, or IMDB ID]")
+			fmt.Println("  watching [Trakt ID, Trakt slug, or IMDB ID]")
+			fmt.Println("  related [Trakt ID, Trakt slug, or IMDB ID]")
+			fmt.Println("  collection-progress [Trakt ID, Trakt slug, or IMDB ID] optionals: hidden specials count_specials")
+			fmt.Println("  watched-progress [Trakt ID, Trakt slug, or IMDB ID] optionals: hidden specials count_specials")
+			fmt.Println("  next-episode [Trakt ID, Trakt slug, or IMDB ID]")
+			fmt.Println("  last-episode [Trakt ID, Trakt slug, or IMDB ID]")
 		}
 
 	},
