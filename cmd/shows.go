@@ -17,7 +17,7 @@ func init() {
 var showsCmd = &cobra.Command{
 	Use:   "shows [OPTIONS]",
 	Short: "returns information about shows",
-	Long:  `returns information about shows allpopular`,
+	Long:  `returns information about shows`,
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 
