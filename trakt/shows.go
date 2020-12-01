@@ -1,6 +1,7 @@
 package trakt
 
 import (
+	"net/url"
 	"time"
 )
 
@@ -22,6 +23,7 @@ var (
 	ShowCommentsURL    = Hyperlink("shows/{traktID}/comments/{sort}")
 	ShowListsURL    = Hyperlink("shows/{traktID}/lists/{tipo}/{sort}")	
 	ShowPeopleURL    = Hyperlink("shows/{traktID}/people")	
+	ShowPeopleExtendedURL    = Hyperlink("shows/{traktID}/people?extended=guest_stars")	
 	ShowRatingsURL    = Hyperlink("shows/{traktID}/ratings")	
 	ShowRelatedURL    = Hyperlink("shows/{traktID}/related")	
 	ShowStatsURL    = Hyperlink("shows/{traktID}/stats")
@@ -95,8 +97,13 @@ func (r *ShowsService) WatchedProgress(traktID string, hiddenB string, specialB 
 
 
 
-func (r *ShowsService) People(traktID string) (show *ShowCast, result *Result) {
-	url, _ := ShowPeopleURL.Expand(M{"traktID": traktID})
+func (r *ShowsService) People(traktID string,extended string) (show *ShowCast, result *Result) {
+	var url *url.URL
+	if extended=="false"{
+		url, _ = ShowPeopleURL.Expand(M{"traktID": traktID})
+	}else{
+		url, _ = ShowPeopleExtendedURL.Expand(M{"traktID": traktID})
+	}
 	result = r.client.get(url, &show)
 	return
 }

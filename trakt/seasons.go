@@ -13,6 +13,7 @@ var (
 	ShowSeasonsCommentsURL    = Hyperlink("shows/{traktID}/seasons/{seasonN}/comments/{sort}")
 	ShowSeasonsListsURL    = Hyperlink("shows/{traktID}/seasons/{seasonN}/lists/{tipo}/{sort}")
 	ShowSeasonsPeopleURL    = Hyperlink("shows/{traktID}/seasons/{seasonN}/people")	
+	ShowSeasonsPeopleExtendedURL    = Hyperlink("shows/{traktID}/seasons/{seasonN}/people?extended=guest_stars")
 	ShowSeasonsRatingsURL    = Hyperlink("shows/{traktID}/seasons/{seasonN}/ratings")	
 	ShowSeasonsStatsURL    = Hyperlink("shows/{traktID}/seasons/{seasonN}/stats")
 	ShowSeasonsWatchingURL    = Hyperlink("shows/{traktID}/seasons/{seasonN}/watching")
@@ -63,27 +64,33 @@ func (r *SeasonsService) SeasonList(traktID string,seasonN string, tipo string,s
 	return
 }
 
-func (r *SeasonsService) SeasonPeople(traktID string,seasonN string) (show *ShowCast, result *Result) {
-	url, _ := ShowSeasonsPeopleURL.Expand(M{"traktID": traktID})
-	result = r.client.get(url, &show)
+func (r *SeasonsService) SeasonPeople(traktID string,seasonN string,extended string) (season *SeasonCast, result *Result) {
+	var url *url.URL
+	if extended=="false"{
+		url, _ = ShowSeasonsPeopleURL.Expand(M{"traktID": traktID,"seasonN":seasonN})
+	}else{
+		url, _ = ShowSeasonsPeopleExtendedURL.Expand(M{"traktID": traktID,"seasonN":seasonN})
+	}
+
+	result = r.client.get(url, &season)
 	return
 }
 
-func (r *SeasonsService) SeasonRatings(traktID string,seasonN string) (show *ShowRatings, result *Result) {
-	url, _ := ShowSeasonsRatingsURL.Expand(M{"traktID": traktID})
-	result = r.client.get(url, &show)
+func (r *SeasonsService) SeasonRatings(traktID string,seasonN string) (season *SeasonRating, result *Result) {
+	url, _ := ShowSeasonsRatingsURL.Expand(M{"traktID": traktID,"seasonN":seasonN})
+	result = r.client.get(url, &season)
 	return
 }
 
-func (r *SeasonsService) SeasonStats(traktID string,seasonN string) (show *ShowStats, result *Result) {
-	url, _ := ShowSeasonsStatsURL.Expand(M{"traktID": traktID})
-	result = r.client.get(url, &show)
+func (r *SeasonsService) SeasonStats(traktID string,seasonN string) (season *SeasonStats, result *Result) {
+	url, _ := ShowSeasonsStatsURL.Expand(M{"traktID": traktID,"seasonN":seasonN})
+	result = r.client.get(url, &season)
 	return
 }
 
-func (r *SeasonsService) SeasonWatching(traktID string,seasonN string) (show []User, result *Result) {
-	url, _ := ShowSeasonsWatchingURL.Expand(M{"traktID": traktID})
-	result = r.client.get(url, &show)
+func (r *SeasonsService) SeasonWatching(traktID string,seasonN string) (season *SeasonUser, result *Result) {
+	url, _ := ShowSeasonsWatchingURL.Expand(M{"traktID": traktID,"seasonN":seasonN})
+	result = r.client.get(url, &season)
 	return
 }
 
@@ -138,6 +145,17 @@ type SeasonComment []struct {
 	} `json:"user"`
 }
 
+type SeasonUser []struct {
+	Username string `json:"username"`
+	Private  bool   `json:"private"`
+	Name     string `json:"name"`
+	Vip      bool   `json:"vip"`
+	VipEp    bool   `json:"vip_ep"`
+	Ids      struct {
+		Slug string `json:"slug"`
+	} `json:"ids"`
+}
+
 
 
 type SeasonList []struct {
@@ -167,4 +185,152 @@ type SeasonList []struct {
 			Slug string `json:"slug"`
 		} `json:"ids"`
 	} `json:"user"`
+}
+
+type SeasonStats struct {
+	Watchers          int `json:"watchers"`
+	Plays             int `json:"plays"`
+	Collectors        int `json:"collectors"`
+	CollectedEpisodes int `json:"collected_episodes"`
+	Comments          int `json:"comments"`
+	Lists             int `json:"lists"`
+	Votes             int `json:"votes"`
+}
+	
+type SeasonRating struct {
+	Rating       float64 `json:"rating"`
+	Votes        int `json:"votes"`
+	Distribution struct {
+		Num1  int `json:"1"`
+		Num2  int `json:"2"`
+		Num3  int `json:"3"`
+		Num4  int `json:"4"`
+		Num5  int `json:"5"`
+		Num6  int `json:"6"`
+		Num7  int `json:"7"`
+		Num8  int `json:"8"`
+		Num9  int `json:"9"`
+		Num10 int `json:"10"`
+	} `json:"distribution"`
+}
+
+
+///////////----------- season cast--------------------
+
+
+type SeasonCast struct {
+	Cast []struct {
+		Characters   []string `json:"characters"`
+		EpisodeCount int      `json:"episode_count"`
+		Person       struct {
+			Name string `json:"name"`
+			Ids  struct {
+				Trakt  int         `json:"trakt"`
+				Slug   string      `json:"slug"`
+				Imdb   string      `json:"imdb"`
+				Tmdb   int         `json:"tmdb"`
+				Tvrage interface{} `json:"tvrage"`
+			} `json:"ids"`
+		} `json:"person"`
+	} `json:"cast"`
+	GuestStars []struct {
+		Characters   []string `json:"characters"`
+		EpisodeCount int      `json:"episode_count"`
+		Person       struct {
+			Name string `json:"name"`
+			Ids  struct {
+				Trakt  int    `json:"trakt"`
+				Slug   string `json:"slug"`
+				Imdb   string `json:"imdb"`
+				Tmdb   int    `json:"tmdb"`
+				Tvrage int    `json:"tvrage"`
+			} `json:"ids"`
+		} `json:"person"`
+	} `json:"guest_stars"`
+	Crew struct {
+		Production []struct {
+			Jobs         []string `json:"jobs"`
+			EpisodeCount int      `json:"episode_count"`
+			Person       struct {
+				Name string `json:"name"`
+				Ids  struct {
+					Trakt  int         `json:"trakt"`
+					Slug   string      `json:"slug"`
+					Imdb   string      `json:"imdb"`
+					Tmdb   int         `json:"tmdb"`
+					Tvrage interface{} `json:"tvrage"`
+				} `json:"ids"`
+			} `json:"person"`
+		} `json:"production"`
+		Sound []struct {
+			Jobs         []string `json:"jobs"`
+			EpisodeCount int      `json:"episode_count"`
+			Person       struct {
+				Name string `json:"name"`
+				Ids  struct {
+					Trakt  int         `json:"trakt"`
+					Slug   string      `json:"slug"`
+					Imdb   string      `json:"imdb"`
+					Tmdb   int         `json:"tmdb"`
+					Tvrage interface{} `json:"tvrage"`
+				} `json:"ids"`
+			} `json:"person"`
+		} `json:"sound"`
+		CostumeMakeUp []struct {
+			Jobs         []string `json:"jobs"`
+			EpisodeCount int      `json:"episode_count"`
+			Person       struct {
+				Name string `json:"name"`
+				Ids  struct {
+					Trakt  int         `json:"trakt"`
+					Slug   string      `json:"slug"`
+					Imdb   string      `json:"imdb"`
+					Tmdb   int         `json:"tmdb"`
+					Tvrage interface{} `json:"tvrage"`
+				} `json:"ids"`
+			} `json:"person"`
+		} `json:"costume & make-up"`
+		Writing []struct {
+			Jobs         []string `json:"jobs"`
+			EpisodeCount int      `json:"episode_count"`
+			Person       struct {
+				Name string `json:"name"`
+				Ids  struct {
+					Trakt  int    `json:"trakt"`
+					Slug   string `json:"slug"`
+					Imdb   string `json:"imdb"`
+					Tmdb   int    `json:"tmdb"`
+					Tvrage int    `json:"tvrage"`
+				} `json:"ids"`
+			} `json:"person"`
+		} `json:"writing"`
+		Art []struct {
+			Jobs         []string `json:"jobs"`
+			EpisodeCount int      `json:"episode_count"`
+			Person       struct {
+				Name string `json:"name"`
+				Ids  struct {
+					Trakt  int         `json:"trakt"`
+					Slug   string      `json:"slug"`
+					Imdb   string      `json:"imdb"`
+					Tmdb   int         `json:"tmdb"`
+					Tvrage interface{} `json:"tvrage"`
+				} `json:"ids"`
+			} `json:"person"`
+		} `json:"art"`
+		Directing []struct {
+			Jobs         []string `json:"jobs"`
+			EpisodeCount int      `json:"episode_count"`
+			Person       struct {
+				Name string `json:"name"`
+				Ids  struct {
+					Trakt  int    `json:"trakt"`
+					Slug   string `json:"slug"`
+					Imdb   string `json:"imdb"`
+					Tmdb   int    `json:"tmdb"`
+					Tvrage int    `json:"tvrage"`
+				} `json:"ids"`
+			} `json:"person"`
+		} `json:"directing"`
+	} `json:"crew"`
 }

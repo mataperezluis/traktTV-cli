@@ -143,6 +143,83 @@ var seasonsCmd = &cobra.Command{
 				} else {
 					fmt.Println("correct use: lists [Trakt ID, Trakt slug, or IMDB ID] [season] [type] [sort]")
 				}
+
+			case "people":
+				if len(args) > 2 {
+					extended:="false"
+					
+					if len(args) > 3{
+						if args[3]=="extended"{
+							extended="true"
+						}
+					}
+
+
+					showResults, err := client.Seasons().SeasonPeople(args[1],args[2],extended)
+					if err != nil {
+						fmt.Println(err)
+					}
+					b, err2 := json.MarshalIndent(showResults, "", " ")
+					if err2 != nil {
+						fmt.Println(err2)
+					}
+					
+					fmt.Println(string(b))                
+						
+				} else {
+					fmt.Println("correct use: people [Trakt ID, Trakt slug, or IMDB ID] [season] [optional: extended]")
+				}
+			
+			case "ratings":
+				if len(args) > 2 {
+					showResults, err := client.Seasons().SeasonRatings(args[1],args[2])
+					if err != nil {
+						fmt.Println(err)
+					}
+					b, err2 := json.MarshalIndent(showResults, "", " ")
+					if err2 != nil {
+						fmt.Println(err2)
+					}
+					
+					fmt.Println(string(b))                
+						
+				} else {
+					fmt.Println("correct use: ratings [Trakt ID, Trakt slug, or IMDB ID] [season]")
+				}
+			
+			case "stats":
+				if len(args) > 2 {
+					showResults, err := client.Seasons().SeasonStats(args[1],args[2])
+					if err != nil {
+						fmt.Println(err)
+					}
+					b, err2 := json.MarshalIndent(showResults, "", " ")
+					if err2 != nil {
+						fmt.Println(err2)
+					}
+					
+					fmt.Println(string(b))                
+						
+				} else {
+					fmt.Println("correct use: stats [Trakt ID, Trakt slug, or IMDB ID] [season]")
+				}
+			
+			case "watching":
+				if len(args) > 2{
+					showResults, err := client.Seasons().SeasonWatching(args[1],args[2])
+					if err != nil {
+						fmt.Println(err)
+					}
+					b, err2 := json.MarshalIndent(showResults, "", " ")
+					if err2 != nil {
+						fmt.Println(err2)
+					}
+					
+					fmt.Println(string(b))                
+						
+				} else {
+					fmt.Println("correct use: watching [Trakt ID, Trakt slug, or IMDB ID] [season]")
+				}
 			
 
 			default:
@@ -151,6 +228,11 @@ var seasonsCmd = &cobra.Command{
 				fmt.Println("  one [Trakt ID, Trakt slug, or IMDB ID] [number of the season]")
 				fmt.Println("  comments [Trakt ID, Trakt slug, or IMDB ID] [season] [sort]")
 				fmt.Println("  lists [Trakt ID, Trakt slug, or IMDB ID] [season] [type] [sort]")
+				fmt.Println("  people [Trakt ID, Trakt slug, or IMDB ID] [season] [optional: extended]")
+				fmt.Println("  ratings [Trakt ID, Trakt slug, or IMDB ID] [season]")
+				fmt.Println("  stats [Trakt ID, Trakt slug, or IMDB ID] [season]")
+				fmt.Println("  watching [Trakt ID, Trakt slug, or IMDB ID] [season]")
+
 			}
 
 	},

@@ -387,7 +387,14 @@ var showsCmd = &cobra.Command{
 
 		case "people":
 			if len(args) > 1 {
-				showResults, err := client.Shows().People(args[1])
+				extended:="false"
+					
+					if len(args) > 2{
+						if args[2]=="extended"{
+							extended="true"
+						}
+					}
+				showResults, err := client.Shows().People(args[1],extended)
 				if err != nil {
 					fmt.Println(err)
 				}
@@ -399,7 +406,7 @@ var showsCmd = &cobra.Command{
 			    fmt.Println(string(b))                
                     
 			} else {
-				fmt.Println("correct use: people [Trakt ID, Trakt slug, or IMDB ID]")
+				fmt.Println("correct use: people [Trakt ID, Trakt slug, or IMDB ID] [optional: extended]")
 			}
 		
 		case "ratings":
@@ -536,7 +543,7 @@ var showsCmd = &cobra.Command{
 			fmt.Println("  translations [Trakt ID, Trakt slug, or IMDB ID] [language]")	
 			fmt.Println("  comments [Trakt ID, Trakt slug, or IMDB ID] [sort]")
 			fmt.Println("  lists [Trakt ID, Trakt slug, or IMDB ID] [type] [sort]")
-			fmt.Println("  people [Trakt ID, Trakt slug, or IMDB ID]")
+			fmt.Println("  people [Trakt ID, Trakt slug, or IMDB ID] [optional: extended]")
 			fmt.Println("  ratings [Trakt ID, Trakt slug, or IMDB ID]")
 			fmt.Println("  stats [Trakt ID, Trakt slug, or IMDB ID]")
 			fmt.Println("  watching [Trakt ID, Trakt slug, or IMDB ID]")
