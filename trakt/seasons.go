@@ -59,7 +59,7 @@ func (r *SeasonsService) SeasonComments(traktID string, seasonN string,sort stri
 }
 
 func (r *SeasonsService) SeasonList(traktID string,seasonN string, tipo string,sort string) (season *SeasonList, result *Result) {
-	url, _ := ShowListsURL.Expand(M{"traktID": traktID,"seasonN":seasonN,"tipo":tipo,"sort": sort})
+	url, _ := ShowSeasonsListsURL.Expand(M{"traktID": traktID,"seasonN":seasonN,"tipo":tipo,"sort": sort})
 	result = r.client.get(url, &season)
 	return
 }
