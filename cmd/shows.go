@@ -12,6 +12,32 @@ import (
 
 func init() {
 	RootCmd.AddCommand(showsCmd)
+	showsCmd.SetHelpTemplate("use: episodes [OPTIONS]\n"+
+	"\navailable options:\n"+
+			"\n  allpopular"+
+            "\n  trending"+
+			"\n  search \"name of the show\""+
+            "\n  recommended [period], periods:  daily , weekly , monthly , yearly , all"+
+            "\n  played [period], periods:  daily , weekly , monthly , yearly , all"+
+            "\n  watched [period], periods:  daily , weekly , monthly , yearly , all"+
+			"\n  collected [period], periods:  daily , weekly , monthly , yearly , all"+
+			"\n  updates [date_start], Example: 2020-11-27T00:00:00Z"+
+			"\n  one [Trakt ID, Trakt slug, or IMDB ID]"+
+			"\n  alias [Trakt ID, Trakt slug, or IMDB ID]"+
+			"\n  certifications [Trakt ID, Trakt slug, or IMDB ID]"+
+			"\n  translations [Trakt ID, Trakt slug, or IMDB ID] [language]"+
+			"\n  comments [Trakt ID, Trakt slug, or IMDB ID] [sort]"+
+			"\n  lists [Trakt ID, Trakt slug, or IMDB ID] [type] [sort]"+
+			"\n  people [Trakt ID, Trakt slug, or IMDB ID] [optional: extended]"+
+			"\n  ratings [Trakt ID, Trakt slug, or IMDB ID]"+
+			"\n  stats [Trakt ID, Trakt slug, or IMDB ID]"+
+			"\n  watching [Trakt ID, Trakt slug, or IMDB ID]"+
+			"\n  related [Trakt ID, Trakt slug, or IMDB ID]"+
+			"\n  collection-progress [Trakt ID, Trakt slug, or IMDB ID] optionals: hidden specials count_specials"+
+			"\n  watched-progress [Trakt ID, Trakt slug, or IMDB ID] optionals: hidden specials count_specials"+
+			"\n  next-episode [Trakt ID, Trakt slug, or IMDB ID]"+
+			"\n  last-episode [Trakt ID, Trakt slug, or IMDB ID]\n")
+
 }
 
 var showsCmd = &cobra.Command{

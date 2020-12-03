@@ -12,6 +12,17 @@ import (
 
 func init() {
 	RootCmd.AddCommand(episodesCmd)
+	episodesCmd.SetHelpTemplate("use: episodes [OPTIONS]\n"+
+	"\navailable options:\n"+
+
+				"\none [Trakt ID, Trakt slug, or IMDB ID] [number of the season] [number of the episode]"+
+				"\ntranslations [Trakt ID, Trakt slug, or IMDB ID] [number of the season] [number of the episode] [language]"+
+				"\ncomments [Trakt ID, Trakt slug, or IMDB ID] [season] [number of the episode] [sort]"+
+				"\nlists [Trakt ID, Trakt slug, or IMDB ID] [season] [number of the episode] [type] [sort]"+
+				"\npeople [Trakt ID, Trakt slug, or IMDB ID] [season] [number of the episode] [optional: extended]"+
+				"\nratings [Trakt ID, Trakt slug, or IMDB ID] [season] [number of the episode]"+
+				"\nstats [Trakt ID, Trakt slug, or IMDB ID] [season] [number of the episode]"+
+				"\nwatching [Trakt ID, Trakt slug, or IMDB ID] [season] [number of the episode] \n")
 }
 
 var episodesCmd = &cobra.Command{
