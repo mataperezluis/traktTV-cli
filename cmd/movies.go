@@ -11,8 +11,8 @@ import (
 )
 
 func init() {
-	RootCmd.AddCommand(showsCmd)
-	showsCmd.SetHelpTemplate("use: episodes [OPTIONS]\n"+
+	RootCmd.AddCommand(moviesCmd)
+	moviesCmd.SetHelpTemplate("use: movies [OPTIONS]\n"+
 	"\navailable options:\n"+
 			"\n  allpopular"+
             "\n  trending"+
@@ -22,10 +22,10 @@ func init() {
             "\n  watched [period], periods:  daily , weekly , monthly , yearly , all"+
 			"\n  collected [period], periods:  daily , weekly , monthly , yearly , all"+
 			"\n  updates [date_start], Example: 2020-11-27T00:00:00Z"+
-			"\n  updates-id date/time (example:2020-11-27T00:00:00Z)"+
 			"\n  one [Trakt ID, Trakt slug, or IMDB ID]"+
 			"\n  alias [Trakt ID, Trakt slug, or IMDB ID]"+
-			"\n  certifications [Trakt ID, Trakt slug, or IMDB ID]"+
+			"\n  boxoffice"+
+			"\n  releases [Trakt ID, Trakt slug, or IMDB ID] [country]"+
 			"\n  translations [Trakt ID, Trakt slug, or IMDB ID] [language]"+
 			"\n  comments [Trakt ID, Trakt slug, or IMDB ID] [sort]"+
 			"\n  lists [Trakt ID, Trakt slug, or IMDB ID] [type] [sort]"+
@@ -33,18 +33,15 @@ func init() {
 			"\n  ratings [Trakt ID, Trakt slug, or IMDB ID]"+
 			"\n  stats [Trakt ID, Trakt slug, or IMDB ID]"+
 			"\n  watching [Trakt ID, Trakt slug, or IMDB ID]"+
-			"\n  related [Trakt ID, Trakt slug, or IMDB ID]"+
-			"\n  collection-progress [Trakt ID, Trakt slug, or IMDB ID] optionals: hidden specials count_specials"+
-			"\n  watched-progress [Trakt ID, Trakt slug, or IMDB ID] optionals: hidden specials count_specials"+
-			"\n  next-episode [Trakt ID, Trakt slug, or IMDB ID]"+
-			"\n  last-episode [Trakt ID, Trakt slug, or IMDB ID]\n")
+			"\n  related [Trakt ID, Trakt slug, or IMDB ID]\n")
+
 
 }
 
-var showsCmd = &cobra.Command{
-	Use:   "shows [OPTIONS]",
-	Short: "returns information about shows",
-	Long:  `returns information about shows`,
+var moviesCmd = &cobra.Command{
+	Use:   "movies [OPTIONS]",
+	Short: "returns information about movies",
+	Long:  `returns information about movies`,
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 
@@ -69,7 +66,7 @@ var showsCmd = &cobra.Command{
 		switch com := args[0]; com {
 
 		case "allpopular":
-			shows, err := client.Shows().AllPopular()
+			shows, err := client.Movies().AllPopular()
 			if err != nil {
 				fmt.Println(err)
 			}
@@ -83,7 +80,7 @@ var showsCmd = &cobra.Command{
 			    fmt.Println(string(b))
 
         case "trending":
-			shows, err := client.Shows().Trending()
+			shows, err := client.Movies().Trending()
 			if err != nil {
 				fmt.Println(err)
 			}
@@ -94,7 +91,20 @@ var showsCmd = &cobra.Command{
 				    fmt.Println(err2)
 			    }
                 
-			    fmt.Println(string(b))
+				fmt.Println(string(b))
+		case "boxoffice":
+			shows, err := client.Movies().BoxOffice()
+			if err != nil {
+				fmt.Println(err)
+			}
+
+				
+				b, err2 := json.MarshalIndent(shows, "", " ")
+				if err2 != nil {
+					fmt.Println(err2)
+				}
+				
+				fmt.Println(string(b))	
 
         case "recommended":
 			if !(len(args) > 1) {
@@ -103,7 +113,7 @@ var showsCmd = &cobra.Command{
             if args[1]!="daily" && args[1]!="weekly" && args[1]!="monthly" && args[1]!="yearly" && args[1]!="all"{
                     args[1]="weekly"    
             }
-			    showResults, err := client.Shows().Recommended(args[1])
+			    showResults, err := client.Movies().Recommended(args[1])
 			    if err != nil {
 				    fmt.Println(err)
 			    }
@@ -124,7 +134,7 @@ var showsCmd = &cobra.Command{
                     args[1]="weekly"    
             }
 
-				    showResults, err := client.Shows().Played(args[1])
+				    showResults, err := client.Movies().Played(args[1])
 				    if err != nil {
 					    fmt.Println(err)
 				    }
@@ -144,7 +154,7 @@ var showsCmd = &cobra.Command{
             if args[1]!="daily" && args[1]!="weekly" && args[1]!="monthly" && args[1]!="yearly" && args[1]!="all"{
                     args[1]="weekly"    
             }
-				    showResults, err := client.Shows().Watched(args[1])
+				    showResults, err := client.Movies().Watched(args[1])
 				    if err != nil {
 					    fmt.Println(err)
 				    }
@@ -163,7 +173,7 @@ var showsCmd = &cobra.Command{
             if args[1]!="daily" && args[1]!="weekly" && args[1]!="monthly" && args[1]!="yearly" && args[1]!="all"{
                     args[1]="weekly"    
             }
-				    showResults, err := client.Shows().Collected(args[1])
+				    showResults, err := client.Movies().Collected(args[1])
 				    if err != nil {
 					    fmt.Println(err)
 				    }
@@ -176,7 +186,7 @@ var showsCmd = &cobra.Command{
                         
 
         case "anticipated":
-			shows, err := client.Shows().Anticipated()
+			shows, err := client.Movies().Anticipated()
 			if err != nil {
 				fmt.Println(err)
 			}
@@ -191,7 +201,7 @@ var showsCmd = &cobra.Command{
 				
 		case "updates":
 			if len(args) > 1 {
-				showResults, err := client.Shows().Updates(args[1])
+				showResults, err := client.Movies().Updates(args[1])
 				if err != nil {
 					fmt.Println(err)
 				}
@@ -207,7 +217,7 @@ var showsCmd = &cobra.Command{
 			}
 		case "updates-id":
 			if len(args) > 1 {
-				showResults, err := client.Shows().UpdatesId(args[1])
+				showResults, err := client.Movies().UpdatesId(args[1])
 				if err != nil {
 					fmt.Println(err)
 				}
@@ -224,7 +234,7 @@ var showsCmd = &cobra.Command{
 
 		case "one":
 			if len(args) > 1 {
-				showResults, err := client.Shows().One(args[1])
+				showResults, err := client.Movies().One(args[1])
 				if err != nil {
 					fmt.Println(err)
 				}
@@ -241,7 +251,7 @@ var showsCmd = &cobra.Command{
 		
 		case "alias":
 			if len(args) > 1 {
-				showResults, err := client.Shows().Alias(args[1])
+				showResults, err := client.Movies().Alias(args[1])
 				if err != nil {
 					fmt.Println(err)
 				}
@@ -256,29 +266,13 @@ var showsCmd = &cobra.Command{
 				fmt.Println("correct use: alias [Trakt ID, Trakt slug, or IMDB ID]")
 			}
 
-		case "certifications":
-			if len(args) > 1 {
-				showResults, err := client.Shows().Certifications(args[1])
-				if err != nil {
-					fmt.Println(err)
-				}
-                b, err2 := json.MarshalIndent(showResults, "", " ")
-                if err2 != nil {
-				    fmt.Println(err2)
-			    }
-                
-			    fmt.Println(string(b))                
-                    
-			} else {
-				fmt.Println("correct use: certifications [Trakt ID, Trakt slug, or IMDB ID]")
-			}
 		case "translations":
 			if len(args) > 1 {
 				languageData:=""
 				if len(args) > 2{
 					languageData=args[2]
 				}
-				showResults, err := client.Shows().Translations(args[1],languageData)
+				showResults, err := client.Movies().Translations(args[1],languageData)
 				if err != nil {
 					fmt.Println(err)
 				}
@@ -292,6 +286,27 @@ var showsCmd = &cobra.Command{
 			} else {
 				fmt.Println("correct use: translations [Trakt ID, Trakt slug, or IMDB ID] [language]")
 			}
+		
+		case "releases":
+			if len(args) > 1 {
+				countryData:=""
+				if len(args) > 2{
+					countryData=args[2]
+				}
+				showResults, err := client.Movies().Releases(args[1],countryData)
+				if err != nil {
+					fmt.Println(err)
+				}
+                b, err2 := json.MarshalIndent(showResults, "", " ")
+                if err2 != nil {
+				    fmt.Println(err2)
+			    }
+                
+			    fmt.Println(string(b))                
+                    
+			} else {
+				fmt.Println("correct use: releases [Trakt ID, Trakt slug, or IMDB ID] [country]")
+			}
 
 		case "comments":
 			if len(args) > 1 {
@@ -302,7 +317,7 @@ var showsCmd = &cobra.Command{
 				if args[2]!="newest" && args[2]!="oldest" && args[2]!="likes" &&  args[2]!="replies" &&  args[2]!="highest" && args[2]!="lowest" && args[2]!="plays" && args[2]!="watched"{
 						args[2]="newest"    
 				}
-				showResults, err := client.Shows().Comments(args[1],args[2])
+				showResults, err := client.Movies().Comments(args[1],args[2])
 				if err != nil {
 					fmt.Println(err)
 				}
@@ -331,7 +346,7 @@ var showsCmd = &cobra.Command{
 				if args[3]!="likes" && args[3]!="likes" && args[3]!="comments" &&  args[3]!="items" &&  args[3]!="added" &&  args[3]!="updated"{
 					args[3]="popular"    
 				}	
-				showResults, err := client.Shows().List(args[1],args[2],args[3])
+				showResults, err := client.Movies().List(args[1],args[2],args[3])
 				if err != nil {
 					fmt.Println(err)
 				}
@@ -345,83 +360,12 @@ var showsCmd = &cobra.Command{
 			} else {
 				fmt.Println("correct use: lists [Trakt ID, Trakt slug, or IMDB ID] [type] [sort]")
 			}
-		case "collection-progress":
-			if len(args) > 1 {
-				hidden:="false"
-				specials:="false"
-				count_specials:="false"
-
-				for _,x:= range args{
-					if x == "hidden"{
-						hidden="true"
-					}else if x == "specials"{
-						specials="true"
-					}else if x == "count_specials"{
-						count_specials="true"
-					}
-
-				}
-
-				showResults, err := client.Shows().CollectionProgress(args[1],hidden,specials,count_specials)
-				if err != nil {
-					fmt.Println(err)
-				}
-                b, err2 := json.MarshalIndent(showResults, "", " ")
-                if err2 != nil {
-				    fmt.Println(err2)
-			    }
-                
-				fmt.Println(string(b))                
-                    
-			} else {
-				fmt.Println("correct use: collection-progress [Trakt ID, Trakt slug, or IMDB ID] optionals: ")
-				fmt.Println("hidden specials count_specials")
-			}
-		
-		case "watched-progress":
-			if len(args) > 1 {
-				hidden:="false"
-				specials:="false"
-				count_specials:="false"
-
-				for _,x:= range args{
-					if x == "hidden"{
-						hidden="true"
-					}else if x == "specials"{
-						specials="true"
-					}else if x == "count_specials"{
-						count_specials="true"
-					}
-
-				}
-
-				showResults, err := client.Shows().WatchedProgress(args[1],hidden,specials,count_specials)
-				if err != nil {
-					fmt.Println(err)
-				}
-                b, err2 := json.MarshalIndent(showResults, "", " ")
-                if err2 != nil {
-				    fmt.Println(err2)
-			    }
-                
-				fmt.Println(string(b))                
-                    
-			} else {
-				fmt.Println("correct use: watched-progress [Trakt ID, Trakt slug, or IMDB ID] optionals: ")
-				fmt.Println("hidden specials count_specials")
-			}
 		
 
 		case "people":
 			if len(args) > 1 {
-				extended:="false"
-					
-					if len(args) > 2{
-						if args[2]=="extended"{
-							extended="true"
-						}
-					}
-				showResults, err := client.Shows().People(args[1],extended)
+				
+				showResults, err := client.Movies().People(args[1])
 				if err != nil {
 					fmt.Println(err)
 				}
@@ -438,7 +382,7 @@ var showsCmd = &cobra.Command{
 		
 		case "ratings":
 			if len(args) > 1 {
-				showResults, err := client.Shows().Ratings(args[1])
+				showResults, err := client.Movies().Ratings(args[1])
 				if err != nil {
 					fmt.Println(err)
 				}
@@ -454,7 +398,7 @@ var showsCmd = &cobra.Command{
 			}
 		case "related":
 			if len(args) > 1 {
-				showResults, err := client.Shows().Related(args[1])
+				showResults, err := client.Movies().Related(args[1])
 				if err != nil {
 					fmt.Println(err)
 				}
@@ -471,7 +415,7 @@ var showsCmd = &cobra.Command{
 		
 		case "stats":
 			if len(args) > 1 {
-				showResults, err := client.Shows().Stats(args[1])
+				showResults, err := client.Movies().Stats(args[1])
 				if err != nil {
 					fmt.Println(err)
 				}
@@ -488,7 +432,7 @@ var showsCmd = &cobra.Command{
 		
 		case "watching":
 			if len(args) > 1 {
-				showResults, err := client.Shows().Watching(args[1])
+				showResults, err := client.Movies().Watching(args[1])
 				if err != nil {
 					fmt.Println(err)
 				}
@@ -502,45 +446,10 @@ var showsCmd = &cobra.Command{
 			} else {
 				fmt.Println("correct use: watching [Trakt ID, Trakt slug, or IMDB ID]")
 			}
-		
-		case "next-episode":
-			if len(args) > 1 {
-				showResults, err := client.Shows().NextEpisode(args[1])
-				if err != nil {
-					fmt.Println(err)
-				}
-                b, err2 := json.MarshalIndent(showResults, "", " ")
-                if err2 != nil {
-				    fmt.Println(err2)
-			    }
-                
-			    fmt.Println(string(b))                
-                    
-			} else {
-				fmt.Println("correct use: next-episode [Trakt ID, Trakt slug, or IMDB ID]")
-			}
-		case "last-episode":
-			if len(args) > 1 {
-				showResults, err := client.Shows().LastEpisode(args[1])
-				if err != nil {
-					fmt.Println(err)
-				}
-                b, err2 := json.MarshalIndent(showResults, "", " ")
-                if err2 != nil {
-				    fmt.Println(err2)
-			    }
-                
-			    fmt.Println(string(b))                
-                    
-			} else {
-				fmt.Println("correct use: last-episode [Trakt ID, Trakt slug, or IMDB ID]")
-			}
-
-
 
 		case "search":
 			if len(args) > 1 {
-				showResults, err := client.Shows().Search(args[1])
+				showResults, err := client.Movies().Search(args[1])
 				if err != nil {
 					fmt.Println(err)
 				}
@@ -564,10 +473,10 @@ var showsCmd = &cobra.Command{
             fmt.Println("  watched [period], periods:  daily , weekly , monthly , yearly , all")
 			fmt.Println("  collected [period], periods:  daily , weekly , monthly , yearly , all")
 			fmt.Println("  updates [date_start], Example: 2020-11-27T00:00:00Z")	
-			fmt.Println("  updates-id date/time (example:2020-11-27T00:00:00Z)")
 			fmt.Println("  one [Trakt ID, Trakt slug, or IMDB ID]")
 			fmt.Println("  alias [Trakt ID, Trakt slug, or IMDB ID]")
-			fmt.Println("  certifications [Trakt ID, Trakt slug, or IMDB ID]")
+			fmt.Println("  boxoffice")
+			fmt.Println("  releases [Trakt ID, Trakt slug, or IMDB ID] [country]")	
 			fmt.Println("  translations [Trakt ID, Trakt slug, or IMDB ID] [language]")	
 			fmt.Println("  comments [Trakt ID, Trakt slug, or IMDB ID] [sort]")
 			fmt.Println("  lists [Trakt ID, Trakt slug, or IMDB ID] [type] [sort]")
@@ -576,10 +485,7 @@ var showsCmd = &cobra.Command{
 			fmt.Println("  stats [Trakt ID, Trakt slug, or IMDB ID]")
 			fmt.Println("  watching [Trakt ID, Trakt slug, or IMDB ID]")
 			fmt.Println("  related [Trakt ID, Trakt slug, or IMDB ID]")
-			fmt.Println("  collection-progress [Trakt ID, Trakt slug, or IMDB ID] optionals: hidden specials count_specials")
-			fmt.Println("  watched-progress [Trakt ID, Trakt slug, or IMDB ID] optionals: hidden specials count_specials")
-			fmt.Println("  next-episode [Trakt ID, Trakt slug, or IMDB ID]")
-			fmt.Println("  last-episode [Trakt ID, Trakt slug, or IMDB ID]")
+
 		}
 
 	},
