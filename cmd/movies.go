@@ -29,7 +29,7 @@ func init() {
 			"\n  translations [Trakt ID, Trakt slug, or IMDB ID] [language]"+
 			"\n  comments [Trakt ID, Trakt slug, or IMDB ID] [sort]"+
 			"\n  lists [Trakt ID, Trakt slug, or IMDB ID] [type] [sort]"+
-			"\n  people [Trakt ID, Trakt slug, or IMDB ID] [optional: extended]"+
+			"\n  people [Trakt ID, Trakt slug, or IMDB ID]"+
 			"\n  ratings [Trakt ID, Trakt slug, or IMDB ID]"+
 			"\n  stats [Trakt ID, Trakt slug, or IMDB ID]"+
 			"\n  watching [Trakt ID, Trakt slug, or IMDB ID]"+
@@ -62,6 +62,7 @@ var moviesCmd = &cobra.Command{
 			""+client_id+"",
 			trakt.TokenAuth{AccessToken: "" + tokenDat.AccessToken + ""},
 		)
+
 
 		switch com := args[0]; com {
 
@@ -377,7 +378,7 @@ var moviesCmd = &cobra.Command{
 			    fmt.Println(string(b))                
                     
 			} else {
-				fmt.Println("correct use: people [Trakt ID, Trakt slug, or IMDB ID] [optional: extended]")
+				fmt.Println("correct use: people [Trakt ID, Trakt slug, or IMDB ID]")
 			}
 		
 		case "ratings":
@@ -480,7 +481,7 @@ var moviesCmd = &cobra.Command{
 			fmt.Println("  translations [Trakt ID, Trakt slug, or IMDB ID] [language]")	
 			fmt.Println("  comments [Trakt ID, Trakt slug, or IMDB ID] [sort]")
 			fmt.Println("  lists [Trakt ID, Trakt slug, or IMDB ID] [type] [sort]")
-			fmt.Println("  people [Trakt ID, Trakt slug, or IMDB ID] [optional: extended]")
+			fmt.Println("  people [Trakt ID, Trakt slug, or IMDB ID]")
 			fmt.Println("  ratings [Trakt ID, Trakt slug, or IMDB ID]")
 			fmt.Println("  stats [Trakt ID, Trakt slug, or IMDB ID]")
 			fmt.Println("  watching [Trakt ID, Trakt slug, or IMDB ID]")

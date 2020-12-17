@@ -12,6 +12,7 @@ import (
 
 func init() {
 	RootCmd.AddCommand(episodesCmd)
+	episodesCmd.Flags().BoolP("extended", "e", false, "show extended info")
 	episodesCmd.SetHelpTemplate("use: episodes [OPTIONS]\n"+
 	"\navailable options:\n"+
 
@@ -19,7 +20,7 @@ func init() {
 				"\ntranslations [Trakt ID, Trakt slug, or IMDB ID] [number of the season] [number of the episode] [language]"+
 				"\ncomments [Trakt ID, Trakt slug, or IMDB ID] [season] [number of the episode] [sort]"+
 				"\nlists [Trakt ID, Trakt slug, or IMDB ID] [season] [number of the episode] [type] [sort]"+
-				"\npeople [Trakt ID, Trakt slug, or IMDB ID] [season] [number of the episode] [optional: extended]"+
+				"\npeople [Trakt ID, Trakt slug, or IMDB ID] [season] [number of the episode] [flag: extended]"+
 				"\nratings [Trakt ID, Trakt slug, or IMDB ID] [season] [number of the episode]"+
 				"\nstats [Trakt ID, Trakt slug, or IMDB ID] [season] [number of the episode]"+
 				"\nwatching [Trakt ID, Trakt slug, or IMDB ID] [season] [number of the episode] \n")
@@ -49,6 +50,8 @@ var episodesCmd = &cobra.Command{
 			""+client_id+"",
 			trakt.TokenAuth{AccessToken: "" + tokenDat.AccessToken + ""},
 		)
+
+		fstatus, _ := cmd.Flags().GetBool("extended")
 
 		switch com := args[0]; com {
 
@@ -147,11 +150,11 @@ var episodesCmd = &cobra.Command{
 				if len(args) > 3 {
 					extended:="false"
 					
-					if len(args) > 4{
-						if args[4]=="extended"{
+					
+						if fstatus{
 							extended="true"
 						}
-					}
+					
 
 
 					showResults, err := client.Episodes().People(args[1],args[2],args[3],extended)
@@ -227,7 +230,7 @@ var episodesCmd = &cobra.Command{
 				fmt.Println("  translations [Trakt ID, Trakt slug, or IMDB ID] [number of the season] [number of the episode] [language]")
 				fmt.Println("  comments [Trakt ID, Trakt slug, or IMDB ID] [season] [number of the episode] [sort]")
 				fmt.Println("  lists [Trakt ID, Trakt slug, or IMDB ID] [season] [number of the episode] [type] [sort]")
-				fmt.Println("  people [Trakt ID, Trakt slug, or IMDB ID] [season] [number of the episode] [optional: extended]")
+				fmt.Println("  people [Trakt ID, Trakt slug, or IMDB ID] [season] [number of the episode] [flag: extended]")
 				fmt.Println("  ratings [Trakt ID, Trakt slug, or IMDB ID] [season] [number of the episode]")
 				fmt.Println("  stats [Trakt ID, Trakt slug, or IMDB ID] [season] [number of the episode]")
 				fmt.Println("  watching [Trakt ID, Trakt slug, or IMDB ID] [season] [number of the episode]")
