@@ -2,8 +2,8 @@ package trakt
 
 const (
 	//TraktAPIURL      = "https://api-v2launch.trakt.tv"
-    TraktAPIURL      = "https://api.trakt.tv"
-    //TraktAPIURL      = "https://private-anon-c87208e743-trakt.apiary-mock.com"
+    //TraktAPIURL      = "https://api.trakt.tv"
+    TraktAPIURL      = "https://private-anon-dcde4a7379-trakt.apiary-mock.com"
 	TraktAPIVersion  = "2"
 	UserAgent        = "Trakt Go " + Version
 	Version          = "0.0.1"
