@@ -1,6 +1,6 @@
 # traktTV-cli
 
-##start a connection 
+ ### start a connection 
 
  traktTV-cli devices 
 
