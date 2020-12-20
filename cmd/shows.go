@@ -1,3 +1,4 @@
+//Package cmd ...
 package cmd
 
 import (
@@ -63,7 +64,7 @@ var showsCmd = &cobra.Command{
 		json.Unmarshal(byteValue, &tokenDat)
 
 		client := trakt.NewClient(
-			""+client_id+"",
+			""+clientID+"",
 			trakt.TokenAuth{AccessToken: "" + tokenDat.AccessToken + ""},
 		)
 
@@ -210,7 +211,7 @@ var showsCmd = &cobra.Command{
 			}
 		case "updates-id":
 			if len(args) > 1 {
-				showResults, err := client.Shows().UpdatesId(args[1])
+				showResults, err := client.Shows().UpdatesID(args[1])
 				if err != nil {
 					fmt.Println(err)
 				}
@@ -352,7 +353,7 @@ var showsCmd = &cobra.Command{
 			if len(args) > 1 {
 				hidden:="false"
 				specials:="false"
-				count_specials:="false"
+				countSpecials:="false"
 
 				for _,x:= range args{
 					if x == "hidden"{
@@ -360,12 +361,12 @@ var showsCmd = &cobra.Command{
 					}else if x == "specials"{
 						specials="true"
 					}else if x == "count_specials"{
-						count_specials="true"
+						countSpecials="true"
 					}
 
 				}
 
-				showResults, err := client.Shows().CollectionProgress(args[1],hidden,specials,count_specials)
+				showResults, err := client.Shows().CollectionProgress(args[1],hidden,specials,countSpecials)
 				if err != nil {
 					fmt.Println(err)
 				}
@@ -385,7 +386,7 @@ var showsCmd = &cobra.Command{
 			if len(args) > 1 {
 				hidden:="false"
 				specials:="false"
-				count_specials:="false"
+				countSpecials:="false"
 
 				for _,x:= range args{
 					if x == "hidden"{
@@ -393,12 +394,12 @@ var showsCmd = &cobra.Command{
 					}else if x == "specials"{
 						specials="true"
 					}else if x == "count_specials"{
-						count_specials="true"
+						countSpecials="true"
 					}
 
 				}
 
-				showResults, err := client.Shows().WatchedProgress(args[1],hidden,specials,count_specials)
+				showResults, err := client.Shows().WatchedProgress(args[1],hidden,specials,countSpecials)
 				if err != nil {
 					fmt.Println(err)
 				}

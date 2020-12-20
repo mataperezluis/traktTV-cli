@@ -1,3 +1,4 @@
+//Package trakt ...
 package trakt
 
 import (
@@ -7,13 +8,13 @@ import (
 	"github.com/jingweno/go-sawyer/mediaheader"
 	"github.com/jingweno/go-sawyer/mediatype"
 )
-
+//Response ...
 type Response struct {
 	MediaType   *mediatype.MediaType
 	MediaHeader *mediaheader.MediaHeader
 	*http.Response
 }
-
+//NewResponse ...
 func NewResponse(sawyerResp *sawyer.Response) (resp *Response, err error) {
 	if sawyerResp.IsError() {
 		err = sawyerResp.ResponseError

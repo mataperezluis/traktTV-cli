@@ -1,3 +1,4 @@
+//Package trakt ...
 package trakt
 
 import (
@@ -6,41 +7,41 @@ import (
 )
 
 var (
-	ShowURL         = Hyperlink("shows/{traktID}")
-	ShowsPopularURL = Hyperlink("shows/popular")
-    ShowsTrendingURL = Hyperlink("shows/trending")
-    ShowsRecommendedURL = Hyperlink("shows/recommended/{period}")
-    ShowsPlayedURL = Hyperlink("shows/played/{period}")
-    ShowsWatchedURL = Hyperlink("shows/watched/{period}")
-    ShowsCollectedURL = Hyperlink("shows/collected/{period}")
-	ShowsAnticipatedURL = Hyperlink("shows/anticipated")
-	ShowsUpdatesURL = Hyperlink("shows/updates/{start_date}")
-	ShowsUpdatesIdURL = Hyperlink("shows/updates/id/{start_date}")	
-	ShowsSearchURL  = Hyperlink("search?query={query}&type=show")
-	ShowAliasURL    = Hyperlink("shows/{traktID}/aliases")
-	ShowCertificationsURL    = Hyperlink("shows/{traktID}/certifications")	
-	ShowTranslationsURL    = Hyperlink("shows/{traktID}/translations/{lang}")	
-	ShowCommentsURL    = Hyperlink("shows/{traktID}/comments/{sort}")
-	ShowListsURL    = Hyperlink("shows/{traktID}/lists/{tipo}/{sort}")	
-	ShowPeopleURL    = Hyperlink("shows/{traktID}/people")	
-	ShowPeopleExtendedURL    = Hyperlink("shows/{traktID}/people?extended=guest_stars")	
-	ShowRatingsURL    = Hyperlink("shows/{traktID}/ratings")	
-	ShowRelatedURL    = Hyperlink("shows/{traktID}/related")	
-	ShowStatsURL    = Hyperlink("shows/{traktID}/stats")
-	ShowWatchingURL    = Hyperlink("shows/{traktID}/watching")
-	ShowNextEpURL    = Hyperlink("shows/{traktID}/next_episode")
-	ShowLastEpURL    = Hyperlink("shows/{traktID}/last_episode")
-	ShowProgressURL = Hyperlink("shows/{traktID}/progress/collection?hidden={hiddenB}&specials={specialsB}&count_specials={count_specialsB}")
-	ShowWatchedProgressURL = Hyperlink("shows/{traktID}/progress/watched?hidden={hiddenB}&specials={specialsB}&count_specials={count_specialsB}")
-	ShowsByIDURL    = Hyperlink("search?id_type={id_type}&id={id}&type=show")
+	showURL         = Hyperlink("shows/{traktID}")
+	showsPopularURL = Hyperlink("shows/popular")
+    showsTrendingURL = Hyperlink("shows/trending")
+    showsRecommendedURL = Hyperlink("shows/recommended/{period}")
+    showsPlayedURL = Hyperlink("shows/played/{period}")
+    showsWatchedURL = Hyperlink("shows/watched/{period}")
+    showsCollectedURL = Hyperlink("shows/collected/{period}")
+	showsAnticipatedURL = Hyperlink("shows/anticipated")
+	showsUpdatesURL = Hyperlink("shows/updates/{start_date}")
+	showsUpdatesIDURL = Hyperlink("shows/updates/id/{start_date}")	
+	showsSearchURL  = Hyperlink("search?query={query}&type=show")
+	showAliasURL    = Hyperlink("shows/{traktID}/aliases")
+	showCertificationsURL    = Hyperlink("shows/{traktID}/certifications")	
+	showTranslationsURL    = Hyperlink("shows/{traktID}/translations/{lang}")	
+	showCommentsURL    = Hyperlink("shows/{traktID}/comments/{sort}")
+	showListsURL    = Hyperlink("shows/{traktID}/lists/{tipo}/{sort}")	
+	showPeopleURL    = Hyperlink("shows/{traktID}/people")	
+	showPeopleExtendedURL    = Hyperlink("shows/{traktID}/people?extended=guest_stars")	
+	showRatingsURL    = Hyperlink("shows/{traktID}/ratings")	
+	showRelatedURL    = Hyperlink("shows/{traktID}/related")	
+	showStatsURL    = Hyperlink("shows/{traktID}/stats")
+	showWatchingURL    = Hyperlink("shows/{traktID}/watching")
+	showNextEpURL    = Hyperlink("shows/{traktID}/next_episode")
+	showLastEpURL    = Hyperlink("shows/{traktID}/last_episode")
+	showProgressURL = Hyperlink("shows/{traktID}/progress/collection?hidden={hiddenB}&specials={specialsB}&count_specials={countspecialsB}")
+	showWatchedProgressURL = Hyperlink("shows/{traktID}/progress/watched?hidden={hiddenB}&specials={specialsB}&count_specials={countspecialsB}")
+	showsByIDURL    = Hyperlink("search?id_type={id_type}&id={id}&type=show")
 )
 
-// Create a ShowsService with the base url.URL
+//Shows Create a ShowsService with the base url.URL
 func (c *Client) Shows() (shows *ShowsService) {
 	shows = &ShowsService{client: c}
 	return
 }
-
+//ShowsService ...
 type ShowsService struct {
 	client *Client
 }
@@ -48,169 +49,169 @@ type ShowsService struct {
 // One returns a single show identified by a Trakt ID. It also returns a Result
 // object to inspect the returned response of the server.
 func (r *ShowsService) One(traktID string) (show *Show, result *Result) {
-	url, _ := ShowURL.Expand(M{"traktID":traktID})
+	url, _ := showURL.Expand(M{"traktID":traktID})
 	result = r.client.get(url, &show)
 	return
 }
-
+//Alias ...
 func (r *ShowsService) Alias(traktID string) (show *ShowAlias, result *Result) {
-	url, _ := ShowAliasURL.Expand(M{"traktID": traktID})
+	url, _ := showAliasURL.Expand(M{"traktID": traktID})
 	result = r.client.get(url, &show)
 	return
 }
-
+//Certifications ...
 func (r *ShowsService) Certifications(traktID string) (show *ShowCert, result *Result) {
-	url, _ := ShowCertificationsURL.Expand(M{"traktID": traktID})
+	url, _ := showCertificationsURL.Expand(M{"traktID": traktID})
 	result = r.client.get(url, &show)
 	return
 }
-
+//Translations ...
 func (r *ShowsService) Translations(traktID string, lang string) (show *ShowTranslations, result *Result) {
-	url, _ := ShowTranslationsURL.Expand(M{"traktID": traktID,"lang": lang})
+	url, _ := showTranslationsURL.Expand(M{"traktID": traktID,"lang": lang})
 	result = r.client.get(url, &show)
 	return
 }
-
+//Comments ...
 func (r *ShowsService) Comments(traktID string, sort string) (show *ShowComment, result *Result) {
-	url, _ := ShowCommentsURL.Expand(M{"traktID": traktID,"sort": sort})
+	url, _ := showCommentsURL.Expand(M{"traktID": traktID,"sort": sort})
 	result = r.client.get(url, &show)
 	return
 }
-
+//List ...
 func (r *ShowsService) List(traktID string, tipo string,sort string) (show *ShowList, result *Result) {
-	url, _ := ShowListsURL.Expand(M{"traktID": traktID,"tipo":tipo,"sort": sort})
+	url, _ := showListsURL.Expand(M{"traktID": traktID,"tipo":tipo,"sort": sort})
+	result = r.client.get(url, &show)
+	return
+}
+//CollectionProgress ...
+func (r *ShowsService) CollectionProgress(traktID string, hiddenB string, specialB string, countspecialsB string) (show *ShowProgress, result *Result) {
+	url, _ := showProgressURL.Expand(M{"traktID": traktID,"hiddenB":hiddenB,"specialsB": specialB,"countspecialsB":countspecialsB})
+	result = r.client.get(url, &show)
+	return
+}
+//WatchedProgress ...
+func (r *ShowsService) WatchedProgress(traktID string, hiddenB string, specialB string, countspecialsB string) (show *ShowProgress, result *Result) {
+	url, _ := showWatchedProgressURL.Expand(M{"traktID": traktID,"hiddenB":hiddenB,"specialsB": specialB,"countspecialsB":countspecialsB})
 	result = r.client.get(url, &show)
 	return
 }
 
-func (r *ShowsService) CollectionProgress(traktID string, hiddenB string, specialB string, count_specialsB string) (show *ShowProgress, result *Result) {
-	url, _ := ShowProgressURL.Expand(M{"traktID": traktID,"hiddenB":hiddenB,"specialsB": specialB,"count_specialsB":count_specialsB})
-	result = r.client.get(url, &show)
-	return
-}
 
-func (r *ShowsService) WatchedProgress(traktID string, hiddenB string, specialB string, count_specialsB string) (show *ShowProgress, result *Result) {
-	url, _ := ShowWatchedProgressURL.Expand(M{"traktID": traktID,"hiddenB":hiddenB,"specialsB": specialB,"count_specialsB":count_specialsB})
-	result = r.client.get(url, &show)
-	return
-}
-
-
-
+//People ...
 func (r *ShowsService) People(traktID string,extended string) (show *ShowCast, result *Result) {
 	var url *url.URL
 	if extended=="false"{
-		url, _ = ShowPeopleURL.Expand(M{"traktID": traktID})
+		url, _ = showPeopleURL.Expand(M{"traktID": traktID})
 	}else{
-		url, _ = ShowPeopleExtendedURL.Expand(M{"traktID": traktID})
+		url, _ = showPeopleExtendedURL.Expand(M{"traktID": traktID})
 	}
 	result = r.client.get(url, &show)
 	return
 }
-
+//Ratings ...
 func (r *ShowsService) Ratings(traktID string) (show *ShowRatings, result *Result) {
-	url, _ := ShowRatingsURL.Expand(M{"traktID": traktID})
+	url, _ := showRatingsURL.Expand(M{"traktID": traktID})
 	result = r.client.get(url, &show)
 	return
 }
-
+//Related ...
 func (r *ShowsService) Related(traktID string) (show *ShowRelated, result *Result) {
-	url, _ := ShowRelatedURL.Expand(M{"traktID": traktID})
+	url, _ := showRelatedURL.Expand(M{"traktID": traktID})
 	result = r.client.get(url, &show)
 	return
 }
-
+//Stats ...
 func (r *ShowsService) Stats(traktID string) (show *ShowStats, result *Result) {
-	url, _ := ShowStatsURL.Expand(M{"traktID": traktID})
+	url, _ := showStatsURL.Expand(M{"traktID": traktID})
 	result = r.client.get(url, &show)
 	return
 }
-
+//Watching ...
 func (r *ShowsService) Watching(traktID string) (show []User, result *Result) {
-	url, _ := ShowWatchingURL.Expand(M{"traktID": traktID})
+	url, _ := showWatchingURL.Expand(M{"traktID": traktID})
 	result = r.client.get(url, &show)
 	return
 }
-
+//NextEpisode ...
 func (r *ShowsService) NextEpisode(traktID string) (show *ShowNext, result *Result) {
-	url, _ := ShowNextEpURL.Expand(M{"traktID": traktID})
+	url, _ := showNextEpURL.Expand(M{"traktID": traktID})
 	result = r.client.get(url, &show)
 	return
 }
-
+//LastEpisode ...
 func (r *ShowsService) LastEpisode(traktID string) (show *ShowNext, result *Result) {
-	url, _ := ShowLastEpURL.Expand(M{"traktID": traktID})
+	url, _ := showLastEpURL.Expand(M{"traktID": traktID})
 	result = r.client.get(url, &show)
 	return
 }
-
+//OneOfType ...
 func (r *ShowsService) OneOfType(id string, idType string) (show *Show, result *Result) {
 	shows := []ShowResult{}
-	url, _ := ShowsByIDURL.Expand(M{"id_type": idType, "id": id})
+	url, _ := showsByIDURL.Expand(M{"id_type": idType, "id": id})
 	result = r.client.get(url, &shows)
 	if len(shows) > 0 {
 		return shows[0].Show, result
 	}
 	return nil, result
 }
-
+//AllPopular ...
 func (r *ShowsService) AllPopular() (shows []Show, result *Result) {
-	url, _ := ShowsPopularURL.Expand(M{})
+	url, _ := showsPopularURL.Expand(M{})
 	result = r.client.get(url, &shows)
 	return
 }
-
+//Trending ...
 func (r *ShowsService) Trending() (shows []ShowTrending, result *Result) {
-	url, _ := ShowsTrendingURL.Expand(M{})
+	url, _ := showsTrendingURL.Expand(M{})
 	result = r.client.get(url, &shows)
 	return
 }
-
+//Recommended ...
 func (r *ShowsService) Recommended(period string) (shows []ShowRecommended, result *Result) {
-	url, _ := ShowsRecommendedURL.Expand(M{"period": period})
+	url, _ := showsRecommendedURL.Expand(M{"period": period})
 	result = r.client.get(url, &shows)
 	return
 }
-
+//Played ...
 func (r *ShowsService) Played(period string) (shows []ShowPlayed, result *Result) {
-	url, _ := ShowsPlayedURL.Expand(M{"period": period})
+	url, _ := showsPlayedURL.Expand(M{"period": period})
 	result = r.client.get(url, &shows)
 	return
 }
-
+//Watched ...
 func (r *ShowsService) Watched(period string) (shows []ShowPlayed, result *Result) {
-	url, _ := ShowsWatchedURL.Expand(M{"period": period})
+	url, _ := showsWatchedURL.Expand(M{"period": period})
 	result = r.client.get(url, &shows)
 	return
 }
-
+//Collected ...
 func (r *ShowsService) Collected(period string) (shows []ShowPlayed, result *Result) {
-	url, _ := ShowsCollectedURL.Expand(M{"period": period})
+	url, _ := showsCollectedURL.Expand(M{"period": period})
 	result = r.client.get(url, &shows)
 	return
 }
-
+//Anticipated ...
 func (r *ShowsService) Anticipated() (shows []ShowAnticipated, result *Result) {
-	url, _ := ShowsAnticipatedURL.Expand(M{})
+	url, _ := showsAnticipatedURL.Expand(M{})
 	result = r.client.get(url, &shows)
 	return
 }
-
+//Updates ...
 func (r *ShowsService) Updates(startDate string) (shows []ShowUpdate, result *Result) {
-	url, _ := ShowsUpdatesURL.Expand(M{"start_date": startDate})
+	url, _ := showsUpdatesURL.Expand(M{"start_date": startDate})
 	result = r.client.get(url, &shows)
 	return
 }
-
-func (r *ShowsService) UpdatesId(startDate string) (showsId UpdatesIdval, result *Result) {
-	url, _ := ShowsUpdatesIdURL.Expand(M{"start_date": startDate})
-	result = r.client.get(url, &showsId)
+//UpdatesID ...
+func (r *ShowsService) UpdatesID(startDate string) (showsID UpdatesIDval, result *Result) {
+	url, _ := showsUpdatesIDURL.Expand(M{"start_date": startDate})
+	result = r.client.get(url, &showsID)
 	return
 }
 
-
+//Search ...
 func (r *ShowsService) Search(query string) (shows []ShowResult, result *Result) {
-	url, _ := ShowsSearchURL.Expand(M{"query": query})
+	url, _ := showsSearchURL.Expand(M{"query": query})
 	result = r.client.get(url, &shows)
 	return
 }
@@ -273,34 +274,35 @@ type Show struct {
 	Votes     int     `json:"votes"`
 	Year      int     `json:"year"`
 }
-
-type UpdatesIdval []int
-
+//UpdatesIDval ...
+type UpdatesIDval []int
+//ShowRecommended ...
 type ShowRecommended struct {
 	UserCount int  `json:"user_count"`
 	Show     ShowData `json:"show"`
 }
-
+//ShowAnticipated ...
 type ShowAnticipated struct {
 	ListCount int  `json:"list_count"`
 	Show     ShowData `json:"show"`
 }
-
+//ShowTranslations ...
 type ShowTranslations []struct {
 	Title    string `json:"title"`
 	Overview string `json:"overview"`
 	Language string `json:"language"`
 }
-
+//ShowTrending ...
 type ShowTrending struct {
 	Watchers int  `json:"watchers"`
 	Show     ShowData `json:"show"`
 }
+//ShowUpdate ...
 type ShowUpdate struct {
 	UpdatedAt time.Time `json:"updated_at"`
 	Show     ShowData `json:"show"`
 }
-
+//ShowPlayed ...
 type ShowPlayed struct {
 	WatcherCount   int  `json:"watcher_count"`
 	PlayCount      int  `json:"play_count"`
@@ -308,18 +310,18 @@ type ShowPlayed struct {
 	CollectorCount int  `json:"collector_count"`
 	Show           ShowData `json:"show"`
 }
-
+//ShowAlias ...
 type ShowAlias []struct {
 	Title   string `json:"title"`
 	Country string `json:"country"`
 }
 
-	
+//ShowCert ...	
 type ShowCert []struct {
 	Certification string `json:"certification"`
 	Country       string `json:"country"`
 }
-
+//Ids ...
 type Ids struct {
 	Trakt int    `json:"trakt"`
 	Slug  string `json:"slug"`
@@ -327,24 +329,25 @@ type Ids struct {
 	Imdb  string `json:"imdb"`
 	Tmdb  int    `json:"tmdb"`
 }
+//ShowData ...
 type ShowData struct {
 	Title string `json:"title"`
 	Year  int    `json:"year"`
 	Ids   Ids    `json:"ids"`
 }
-
+//ShowResultTrending ...
 type ShowResultTrending struct {
 	Score float64 `json:"score"`
 	Show  *ShowTrending   `json:"show"`
 	Type  string  `json:"type"`
 }
-
+//ShowResult ...
 type ShowResult struct {
 	Score float64 `json:"score"`
 	Show  *Show   `json:"show"`
 	Type  string  `json:"type"`
 }
-
+//ShowComment ...
 type ShowComment []struct {
 	ID        int       `json:"id"`
 	ParentID  int       `json:"parent_id"`
@@ -363,7 +366,7 @@ type ShowComment []struct {
 	Ids            IdsM       `json:"ids"`
 	User           User      `json:"user"`
 }
-
+//ShowList ...
 type ShowList []struct {
 	Name           string    `json:"name"`
 	Description    string    `json:"description"`
@@ -380,13 +383,16 @@ type ShowList []struct {
 	Ids            IdsM       `json:"ids"`
 	User           User      `json:"user"`
 }
+//IdsM ...
 type IdsM struct {
 	Trakt int    `json:"trakt"`
 	Slug  string `json:"slug"`
 }
+//IdsUsr ...
 type IdsUsr struct {
 	Slug string `json:"slug"`
 }
+// User ...
 type User struct {
 	Username string `json:"username"`
 	Private  bool   `json:"private"`
@@ -396,7 +402,7 @@ type User struct {
 	Ids      IdsUsr    `json:"ids"`
 }
 
-
+//ShowRatings ...
 type ShowRatings struct {
 	Rating       float64 `json:"rating"`
 	Votes        int     `json:"votes"`
@@ -413,13 +419,13 @@ type ShowRatings struct {
 		Num10 int `json:"10"`
 	} `json:"distribution"`
 }
-
+//ShowRelated ...
 type ShowRelated []struct {
 	Title string `json:"title"`
 	Year  int    `json:"year"`
 	Ids   Ids `json:"ids"`
 }
-
+//ShowStats ...
 type ShowStats struct {
 	Watchers          int `json:"watchers"`
 	Plays             int `json:"plays"`
@@ -430,14 +436,14 @@ type ShowStats struct {
 	Votes             int `json:"votes"`
 	Recommended       int `json:"recommended"`
 }
-
+//ShowNext ...
 type ShowNext struct {
 	Season int    `json:"season"`
 	Number int    `json:"number"`
 	Title  string `json:"title"`
 	Ids    Ids `json:"ids"`
 }
-
+//ShowProgress ...
 type ShowProgress struct {
 	Aired           int       `json:"aired"`
 	Completed       int       `json:"completed"`
@@ -485,8 +491,7 @@ type ShowProgress struct {
 	} `json:"last_episode"`
 }
 
-//------------------------cast struct -------------------------------------
-
+//ShowCast ...
 type ShowCast struct {
 	Cast []struct {
 		Characters   []string `json:"characters"`

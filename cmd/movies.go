@@ -1,3 +1,4 @@
+//Package cmd ...
 package cmd
 
 import (
@@ -59,7 +60,7 @@ var moviesCmd = &cobra.Command{
 		json.Unmarshal(byteValue, &tokenDat)
 
 		client := trakt.NewClient(
-			""+client_id+"",
+			""+clientID+"",
 			trakt.TokenAuth{AccessToken: "" + tokenDat.AccessToken + ""},
 		)
 
@@ -218,7 +219,7 @@ var moviesCmd = &cobra.Command{
 			}
 		case "updates-id":
 			if len(args) > 1 {
-				showResults, err := client.Movies().UpdatesId(args[1])
+				showResults, err := client.Movies().UpdatesID(args[1])
 				if err != nil {
 					fmt.Println(err)
 				}

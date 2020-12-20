@@ -1,3 +1,4 @@
+//Package trakt ...
 package trakt
 
 import (
@@ -7,24 +8,24 @@ import (
 )
 
 var (
-	ShowSeasonsURL       = Hyperlink("shows/{showTraktID}/seasons")
-	ShowSeasonsExtendedURL       = Hyperlink("shows/{showTraktID}/seasons?extended={extraInfo}")
-	ShowSeasonsNumberURL = Hyperlink("shows/{showTraktID}/seasons/{seasonNumber}")
-	ShowSeasonsCommentsURL    = Hyperlink("shows/{traktID}/seasons/{seasonN}/comments/{sort}")
-	ShowSeasonsListsURL    = Hyperlink("shows/{traktID}/seasons/{seasonN}/lists/{tipo}/{sort}")
-	ShowSeasonsPeopleURL    = Hyperlink("shows/{traktID}/seasons/{seasonN}/people")	
-	ShowSeasonsPeopleExtendedURL    = Hyperlink("shows/{traktID}/seasons/{seasonN}/people?extended=guest_stars")
-	ShowSeasonsRatingsURL    = Hyperlink("shows/{traktID}/seasons/{seasonN}/ratings")	
-	ShowSeasonsStatsURL    = Hyperlink("shows/{traktID}/seasons/{seasonN}/stats")
-	ShowSeasonsWatchingURL    = Hyperlink("shows/{traktID}/seasons/{seasonN}/watching")
+	showSeasonsURL       = Hyperlink("shows/{showTraktID}/seasons")
+	showSeasonsExtendedURL       = Hyperlink("shows/{showTraktID}/seasons?extended={extraInfo}")
+	showSeasonsNumberURL = Hyperlink("shows/{showTraktID}/seasons/{seasonNumber}")
+	showSeasonsCommentsURL    = Hyperlink("shows/{traktID}/seasons/{seasonN}/comments/{sort}")
+	showSeasonsListsURL    = Hyperlink("shows/{traktID}/seasons/{seasonN}/lists/{tipo}/{sort}")
+	showSeasonsPeopleURL    = Hyperlink("shows/{traktID}/seasons/{seasonN}/people")	
+	showSeasonsPeopleExtendedURL    = Hyperlink("shows/{traktID}/seasons/{seasonN}/people?extended=guest_stars")
+	showSeasonsRatingsURL    = Hyperlink("shows/{traktID}/seasons/{seasonN}/ratings")	
+	showSeasonsStatsURL    = Hyperlink("shows/{traktID}/seasons/{seasonN}/stats")
+	showSeasonsWatchingURL    = Hyperlink("shows/{traktID}/seasons/{seasonN}/watching")
 )
 
-// Create a ShowsService with the base url.URL
+//Seasons Create a ShowsService with the base url.URL
 func (c *Client) Seasons() (seasons *SeasonsService) {
 	seasons = &SeasonsService{client: c}
 	return
 }
-
+//SeasonsService ...
 type SeasonsService struct {
 	client *Client
 }
@@ -34,9 +35,9 @@ type SeasonsService struct {
 func (r *SeasonsService) All(showTraktID string,extraInfo string) (seasons *Season, result *Result) {
 	var url *url.URL
 	if extraInfo == ""{
-		url, _ = ShowSeasonsURL.Expand(M{"showTraktID": showTraktID})
+		url, _ = showSeasonsURL.Expand(M{"showTraktID": showTraktID})
 	}else {
-		url, _ = ShowSeasonsExtendedURL.Expand(M{"showTraktID": showTraktID,"extraInfo":extraInfo})
+		url, _ = showSeasonsExtendedURL.Expand(M{"showTraktID": showTraktID,"extraInfo":extraInfo})
 	}
 	result = r.client.get(url, &seasons)
 	return
@@ -44,52 +45,52 @@ func (r *SeasonsService) All(showTraktID string,extraInfo string) (seasons *Seas
 
 // ByNumber returns a specific season of a particular Show.
 func (r *SeasonsService) ByNumber(showTraktID string, seasonNumber string) (season []Episodes, result *Result) {
-	url, _ := ShowSeasonsNumberURL.Expand(M{
+	url, _ := showSeasonsNumberURL.Expand(M{
 		"showTraktID":  showTraktID,
 		"seasonNumber": seasonNumber,
 	})
 	result = r.client.get(url, &season)
 	return
 }
-
+//SeasonComments ...
 func (r *SeasonsService) SeasonComments(traktID string, seasonN string,sort string) (season *SeasonComment, result *Result) {
-	url, _ := ShowSeasonsCommentsURL.Expand(M{"traktID": traktID,"seasonN": seasonN,"sort": sort})
+	url, _ := showSeasonsCommentsURL.Expand(M{"traktID": traktID,"seasonN": seasonN,"sort": sort})
 	result = r.client.get(url, &season)
 	return
 }
-
+//SeasonList ...
 func (r *SeasonsService) SeasonList(traktID string,seasonN string, tipo string,sort string) (season *SeasonList, result *Result) {
-	url, _ := ShowSeasonsListsURL.Expand(M{"traktID": traktID,"seasonN":seasonN,"tipo":tipo,"sort": sort})
+	url, _ := showSeasonsListsURL.Expand(M{"traktID": traktID,"seasonN":seasonN,"tipo":tipo,"sort": sort})
 	result = r.client.get(url, &season)
 	return
 }
-
+//SeasonPeople ...
 func (r *SeasonsService) SeasonPeople(traktID string,seasonN string,extended string) (season *SeasonCast, result *Result) {
 	var url *url.URL
 	if extended=="false"{
-		url, _ = ShowSeasonsPeopleURL.Expand(M{"traktID": traktID,"seasonN":seasonN})
+		url, _ = showSeasonsPeopleURL.Expand(M{"traktID": traktID,"seasonN":seasonN})
 	}else{
-		url, _ = ShowSeasonsPeopleExtendedURL.Expand(M{"traktID": traktID,"seasonN":seasonN})
+		url, _ = showSeasonsPeopleExtendedURL.Expand(M{"traktID": traktID,"seasonN":seasonN})
 	}
 
 	result = r.client.get(url, &season)
 	return
 }
-
+//SeasonRatings ...
 func (r *SeasonsService) SeasonRatings(traktID string,seasonN string) (season *SeasonRating, result *Result) {
-	url, _ := ShowSeasonsRatingsURL.Expand(M{"traktID": traktID,"seasonN":seasonN})
+	url, _ := showSeasonsRatingsURL.Expand(M{"traktID": traktID,"seasonN":seasonN})
 	result = r.client.get(url, &season)
 	return
 }
-
+//SeasonStats ...
 func (r *SeasonsService) SeasonStats(traktID string,seasonN string) (season *SeasonStats, result *Result) {
-	url, _ := ShowSeasonsStatsURL.Expand(M{"traktID": traktID,"seasonN":seasonN})
+	url, _ := showSeasonsStatsURL.Expand(M{"traktID": traktID,"seasonN":seasonN})
 	result = r.client.get(url, &season)
 	return
 }
-
+//SeasonWatching ...
 func (r *SeasonsService) SeasonWatching(traktID string,seasonN string) (season *SeasonUser, result *Result) {
-	url, _ := ShowSeasonsWatchingURL.Expand(M{"traktID": traktID,"seasonN":seasonN})
+	url, _ := showSeasonsWatchingURL.Expand(M{"traktID": traktID,"seasonN":seasonN})
 	result = r.client.get(url, &season)
 	return
 }
@@ -100,24 +101,27 @@ type Season []struct {
 	Ids      Ids        `json:"ids"`
 	Episodes []Episodes `json:"episodes"`
 }
+//IdsSeason ...
 type IdsSeason struct {
 	Trakt int `json:"trakt"`
 	Tvdb  int `json:"tvdb"`
 	Tmdb  int `json:"tmdb"`
 }
+//IdsEpisodes ...
 type IdsEpisodes struct {
 	Trakt int    `json:"trakt"`
 	Tvdb  int    `json:"tvdb"`
 	Imdb  string `json:"imdb"`
 	Tmdb  int    `json:"tmdb"`
 }
+//Episodes ...
 type Episodes struct {
 	Season int    `json:"season"`
 	Number int    `json:"number"`
 	Title  string `json:"title"`
 	Ids    IdsEpisodes    `json:"ids"`
 }
-
+//SeasonComment ...
 type SeasonComment []struct {
 	ID        int       `json:"id"`
 	ParentID  int       `json:"parent_id"`
@@ -144,7 +148,7 @@ type SeasonComment []struct {
 		} `json:"ids"`
 	} `json:"user"`
 }
-
+//SeasonUser ...
 type SeasonUser []struct {
 	Username string `json:"username"`
 	Private  bool   `json:"private"`
@@ -157,7 +161,7 @@ type SeasonUser []struct {
 }
 
 
-
+//SeasonList ...
 type SeasonList []struct {
 	Name           string    `json:"name"`
 	Description    string    `json:"description"`
@@ -186,7 +190,7 @@ type SeasonList []struct {
 		} `json:"ids"`
 	} `json:"user"`
 }
-
+//SeasonStats ...
 type SeasonStats struct {
 	Watchers          int `json:"watchers"`
 	Plays             int `json:"plays"`
@@ -196,7 +200,7 @@ type SeasonStats struct {
 	Lists             int `json:"lists"`
 	Votes             int `json:"votes"`
 }
-	
+//SeasonRating ...	
 type SeasonRating struct {
 	Rating       float64 `json:"rating"`
 	Votes        int `json:"votes"`
@@ -214,10 +218,7 @@ type SeasonRating struct {
 	} `json:"distribution"`
 }
 
-
-///////////----------- season cast--------------------
-
-
+//SeasonCast ...
 type SeasonCast struct {
 	Cast []struct {
 		Characters   []string `json:"characters"`

@@ -1,3 +1,4 @@
+//Package cmd ...
 package cmd
 
 import (
@@ -14,8 +15,8 @@ import (
 
 )
 
-const client_id = "88f5df64ae395414edfa783e5a62eaf8718e79d42eee8fe12306db3dd343240e"
-const client_secret = "3b2fdf87b8805e38ce74fe31819d46859b6bfc35aec8262cc7dccbf69ac7debb"
+const clientID = "88f5df64ae395414edfa783e5a62eaf8718e79d42eee8fe12306db3dd343240e"
+const clientSecret = "3b2fdf87b8805e38ce74fe31819d46859b6bfc35aec8262cc7dccbf69ac7debb"
 
 
 
@@ -56,7 +57,7 @@ var devicesCmd = &cobra.Command{
     
 
     var jsonStr = []byte(`{"Accept": "application/json",
-               "client_id":"`+ client_id+ `"}`)
+               "client_id":"`+ clientID+ `"}`)
 
 	client := http.Client{}
 	request, err := http.NewRequest("POST", trakt.TraktAPIURL + "/oauth/device/code",  bytes.NewBuffer(jsonStr))
@@ -89,8 +90,8 @@ var devicesCmd = &cobra.Command{
 
     var jsonStrToken = []byte(`{
         "code": "` + dat.DeviceCode + `",
-        "client_id": "`+ client_id+ `",
-        "client_secret": "`+ client_secret+ `"
+        "client_id": "`+ clientID+ `",
+        "client_secret": "`+ clientSecret+ `"
     }`)
     
     s := spin.New()

@@ -1,3 +1,4 @@
+//Package trakt ...
 package trakt
 
 import (
@@ -14,24 +15,28 @@ import (
 	"github.com/jingweno/go-sawyer/hypermedia"
 )
 
+//NewClient ...
 func NewClient(apiKey string, authMethod AuthMethod) *Client {
 	return NewClientWith(TraktAPIURL, UserAgent, apiKey, authMethod, nil)
 }
 
+//NewClientWith ...
 func NewClientWith(baseURL string, UserAgent string, apiKey string, authMethod AuthMethod, httpClient *http.Client) *Client {
 	client, _ := sawyer.NewFromString(baseURL, httpClient)
-	return &Client{Client: client, UserAgent: UserAgent, ApiKey: apiKey, AuthMethod: authMethod}
+	return &Client{Client: client, UserAgent: UserAgent, APIKey: apiKey, AuthMethod: authMethod}
 }
 
+//Client ...
 type Client struct {
 	*sawyer.Client
 
 	UserAgent  string
 	AuthMethod AuthMethod
-	ApiKey     string
+	APIKey     string
 	rootRels   hypermedia.Relations
 }
 
+//NewRequest ...
 func (c *Client) NewRequest(urlStr string) (req *Request, err error) {
 	// TODO Move this to a more sane place
 /*	if strings.Contains(urlStr, "?") == true {
@@ -93,8 +98,8 @@ func (c *Client) patch(url *url.URL, input interface{}, output interface{}) (res
 	})
 }
 
-func (c *Client) upload(uploadUrl *url.URL, asset io.ReadCloser, contentType string, contentLength int64) (result *Result) {
-	req, err := c.NewRequest(uploadUrl.String())
+func (c *Client) upload(uploadURL *url.URL, asset io.ReadCloser, contentType string, contentLength int64) (result *Result) {
+	req, err := c.NewRequest(uploadURL.String())
 	if err != nil {
 		result = newResult(nil, err)
 		return
@@ -114,7 +119,7 @@ func (c *Client) applyRequestHeaders(req *Request) {
 	req.Header.Set("Accept", DefaultMediaType)
 	req.Header.Set("User-Agent", c.UserAgent)
 	req.Header.Set("trakt-api-version", TraktAPIVersion)
-	req.Header.Set("trakt-api-key", c.ApiKey)
+	req.Header.Set("trakt-api-key", c.APIKey)
 	req.Header.Set("Content-Type", "application/json")
 
 	if tokenAuth, ok := c.AuthMethod.(TokenAuth); ok {

@@ -1,11 +1,14 @@
-package trakt
+// Package trakt ...
+package trakt  // import trakt
 
 import "fmt"
 
+//AuthMethod ...
 type AuthMethod interface {
 	fmt.Stringer
 }
 
+//TokenAuth ...
 type TokenAuth struct {
 	AccessToken string
 }

@@ -1,3 +1,4 @@
+//Package trakt ...
 package trakt
 
 import (
@@ -9,29 +10,31 @@ import (
 	"github.com/jingweno/go-sawyer"
 )
 
+//ResponseErrorType ...
 type ResponseErrorType int
 
 const (
-	ErrorClientError             ResponseErrorType = iota // 400-499
-	ErrorBadRequest              ResponseErrorType = iota // 400
-	ErrorUnauthorized            ResponseErrorType = iota // 401
-	ErrorOneTimePasswordRequired ResponseErrorType = iota // 401
-	ErrorForbidden               ResponseErrorType = iota // 403
-	ErrorTooManyRequests         ResponseErrorType = iota // 403
-	ErrorTooManyLoginAttempts    ResponseErrorType = iota // 403
-	ErrorNotFound                ResponseErrorType = iota // 404
-	ErrorNotAcceptable           ResponseErrorType = iota // 406
-	ErrorUnsupportedMediaType    ResponseErrorType = iota // 414
-	ErrorUnprocessableEntity     ResponseErrorType = iota // 422
-	ErrorServerError             ResponseErrorType = iota // 500-599
-	ErrorInternalServerError     ResponseErrorType = iota // 500
-	ErrorNotImplemented          ResponseErrorType = iota // 501
-	ErrorBadGateway              ResponseErrorType = iota // 502
-	ErrorServiceUnavailable      ResponseErrorType = iota // 503
-	ErrorMissingContentType      ResponseErrorType = iota
-	ErrorUnknownError            ResponseErrorType = iota
+	errorClientError             ResponseErrorType = iota // 400-499
+	errorBadRequest              ResponseErrorType = iota // 400
+	errorUnauthorized            ResponseErrorType = iota // 401
+	errorOneTimePasswordRequired ResponseErrorType = iota // 401
+	errorForbidden               ResponseErrorType = iota // 403
+	errorTooManyRequests         ResponseErrorType = iota // 403
+	errorTooManyLoginAttempts    ResponseErrorType = iota // 403
+	errorNotFound                ResponseErrorType = iota // 404
+	errorNotAcceptable           ResponseErrorType = iota // 406
+	errorUnsupportedMediaType    ResponseErrorType = iota // 414
+	errorUnprocessableEntity     ResponseErrorType = iota // 422
+	errorServerError             ResponseErrorType = iota // 500-599
+	errorInternalServerError     ResponseErrorType = iota // 500
+	errorNotImplemented          ResponseErrorType = iota // 501
+	errorBadGateway              ResponseErrorType = iota // 502
+	errorServiceUnavailable      ResponseErrorType = iota // 503
+	errorMissingContentType      ResponseErrorType = iota
+	errorUnknownError            ResponseErrorType = iota
 )
 
+//ErrorObject ...
 type ErrorObject struct {
 	Resource string `json:"resource,omitempty"`
 	Code     string `json:"code,omitempty"`
@@ -39,6 +42,7 @@ type ErrorObject struct {
 	Message  string `json:"message,omitempty"`
 }
 
+//Error ...
 func (e *ErrorObject) Error() string {
 	err := fmt.Sprintf("%v error", e.Code)
 	if e.Field != "" {
@@ -52,6 +56,7 @@ func (e *ErrorObject) Error() string {
 	return err
 }
 
+//ResponseError ...
 type ResponseError struct {
 	Response         *http.Response    `json:"-"`
 	Type             ResponseErrorType `json:"-"`
@@ -61,6 +66,7 @@ type ResponseError struct {
 	DocumentationURL string            `json:"documentation_url,omitempty"`
 }
 
+//Error ...
 func (e *ResponseError) Error() string {
 	return fmt.Sprintf("%v %v: %d - %s",
 		e.Response.Request.Method, e.Response.Request.URL,
@@ -95,6 +101,7 @@ func (e *ResponseError) errorMessage() string {
 	return strings.Join(messages, "\n")
 }
 
+//NewResponseError ...
 func NewResponseError(resp *sawyer.Response) (err *ResponseError) {
 	err = &ResponseError{}
 
@@ -114,60 +121,60 @@ func getResponseErrorType(err *ResponseError) ResponseErrorType {
 
 	switch {
 	case code == http.StatusBadRequest:
-		return ErrorBadRequest
+		return errorBadRequest
 
 	case code == http.StatusUnauthorized:
 		otp := header.Get("X-GitHub-OTP")
 		r := regexp.MustCompile(`(?i)required; (\w+)`)
 		if r.MatchString(otp) {
-			return ErrorOneTimePasswordRequired
+			return errorOneTimePasswordRequired
 		}
 
-		return ErrorUnauthorized
+		return errorUnauthorized
 
 	case code == http.StatusForbidden:
 		msg := err.Message
 		rr := regexp.MustCompile("(?i)rate limit exceeded")
 		if rr.MatchString(msg) {
-			return ErrorTooManyRequests
+			return errorTooManyRequests
 		}
 		lr := regexp.MustCompile("(?i)login attempts exceeded")
 		if lr.MatchString(msg) {
-			return ErrorTooManyLoginAttempts
+			return errorTooManyLoginAttempts
 		}
 
-		return ErrorForbidden
+		return errorForbidden
 
 	case code == http.StatusNotFound:
-		return ErrorNotFound
+		return errorNotFound
 
 	case code == http.StatusNotAcceptable:
-		return ErrorNotAcceptable
+		return errorNotAcceptable
 
 	case code == http.StatusUnsupportedMediaType:
-		return ErrorUnsupportedMediaType
+		return errorUnsupportedMediaType
 
 	case code == 422:
-		return ErrorUnprocessableEntity
+		return errorUnprocessableEntity
 
 	case code >= 400 && code <= 499:
-		return ErrorClientError
+		return errorClientError
 
 	case code == http.StatusInternalServerError:
-		return ErrorInternalServerError
+		return errorInternalServerError
 
 	case code == http.StatusNotImplemented:
-		return ErrorNotImplemented
+		return errorNotImplemented
 
 	case code == http.StatusBadGateway:
-		return ErrorBadGateway
+		return errorBadGateway
 
 	case code == http.StatusServiceUnavailable:
-		return ErrorServiceUnavailable
+		return errorServiceUnavailable
 
 	case code >= 500 && code <= 599:
-		return ErrorServerError
+		return errorServerError
 	}
 
-	return ErrorUnknownError
+	return errorUnknownError
 }

@@ -1,3 +1,4 @@
+// Package trakt ...
 package trakt
 
 import (
@@ -7,94 +8,103 @@ import (
 
 var (
 
-	CalendarsGETShowsUrl = Hyperlink("calendars/my/shows/{start_date}/{days}")
-	CalendarsGETNewShows= Hyperlink("calendars/my/shows/new/{start_date}/{days}")
-	CalendarsGETSeasonsPremiere = Hyperlink("calendars/my/shows/premieres/{start_date}/{days}")
-	CalendarsGETMovies = Hyperlink("calendars/my/movies/{start_date}/{days}")
-	CalendarsGETDVD = Hyperlink("calendars/my/dvd/{start_date}/{days}")
-	CalendarsGETAllShows = Hyperlink("calendars/all/shows/start_date/days")
-	CalendarsGETAllNewShows = Hyperlink("calendars/all/shows/new/start_date/days")
-	CalendarsGETSeasonPremire = Hyperlink("calendars/all/shows/premieres/start_date/days")
-	CalendarsGETAllMovies = Hyperlink("calendars/all/movies/start_date/days")
-	CalendarsGETAllDVD = Hyperlink("calendars/all/dvd/start_date/days")
+	calendarsGETShowsURL = Hyperlink("calendars/my/shows/{start_date}/{days}")
+	calendarsGETNewShows= Hyperlink("calendars/my/shows/new/{start_date}/{days}")
+	calendarsGETSeasonsPremiere = Hyperlink("calendars/my/shows/premieres/{start_date}/{days}")
+	calendarsGETMovies = Hyperlink("calendars/my/movies/{start_date}/{days}")
+	calendarsGETDVD = Hyperlink("calendars/my/dvd/{start_date}/{days}")
+	calendarsGETAllShows = Hyperlink("calendars/all/shows/start_date/days")
+	calendarsGETAllNewShows = Hyperlink("calendars/all/shows/new/start_date/days")
+	calendarsGETSeasonPremire = Hyperlink("calendars/all/shows/premieres/start_date/days")
+	calendarsGETAllMovies = Hyperlink("calendars/all/movies/start_date/days")
+	calendarsGETAllDVD = Hyperlink("calendars/all/dvd/start_date/days")
 )
 
-// Create a CalendarsService with the base url.URL
+//Calendars with the base url.URL
 func (c *Client) Calendars() (Calendars *CalendarsService) {
 	Calendars = &CalendarsService{client: c}
 	return
 }
 
+//CalendarsService ...
 type CalendarsService struct {
 	client *Client
 }
 
-// One returns a single Movie identified by a Trakt ID. It also returns a Result
-// object to inspect the returned response of the server.
+
+//MyShows ...
 func (r *CalendarsService) MyShows(startdate string, days string) (calendar *CalendarShow, result *Result) {
-	url, _ := CalendarsGETShowsUrl.Expand(M{"start_date":startdate,"days":days})
+	url, _ := calendarsGETShowsURL.Expand(M{"start_date":startdate,"days":days})
 	result = r.client.get(url, &calendar)
 	return
 }
 
+//MyNewShows ...
 func (r *CalendarsService) MyNewShows(startdate string, days string) (calendar *CalendarShow, result *Result) {
-	url, _ := CalendarsGETNewShows.Expand(M{"start_date":startdate,"days":days})
+	url, _ := calendarsGETNewShows.Expand(M{"start_date":startdate,"days":days})
 	result = r.client.get(url, &calendar)
 	return
 }
 
+//MySeasonPremiere ...
 func (r *CalendarsService) MySeasonPremiere(startdate string, days string) (calendar *CalendarShow, result *Result) {
-	url, _ := CalendarsGETSeasonsPremiere.Expand(M{"start_date":startdate,"days":days})
+	url, _ := calendarsGETSeasonsPremiere.Expand(M{"start_date":startdate,"days":days})
 	result = r.client.get(url, &calendar)
 	return
 }
 
-func (r *CalendarsService) MyMovies(startdate string, days string) (calendars *calendarMovies, result *Result) {
-	url, _ := CalendarsGETMovies.Expand(M{"start_date":startdate,"days":days})
+//MyMovies ...
+func (r *CalendarsService) MyMovies(startdate string, days string) (calendars *CalendarMovies, result *Result) {
+	url, _ := calendarsGETMovies.Expand(M{"start_date":startdate,"days":days})
 	result = r.client.get(url, &calendars)
 	return
 }
 
-func (r *CalendarsService) MyDVD(startdate string, days string) (calendars *calendarMovies, result *Result) {
-	url, _ := CalendarsGETDVD.Expand(M{"start_date":startdate,"days":days})
+//MyDVD ...
+func (r *CalendarsService) MyDVD(startdate string, days string) (calendars *CalendarMovies, result *Result) {
+	url, _ := calendarsGETDVD.Expand(M{"start_date":startdate,"days":days})
 	result = r.client.get(url, &calendars)
 	return
 }
 
+//AllShows ...
 func (r *CalendarsService) AllShows(startdate string, days string) (calendar *CalendarShow, result *Result) {
-	url, _ := CalendarsGETAllShows.Expand(M{"start_date":startdate,"days":days})
+	url, _ := calendarsGETAllShows.Expand(M{"start_date":startdate,"days":days})
 	result = r.client.get(url, &calendar)
 	return
 }
 
+//AllNewShows ...
 func (r *CalendarsService) AllNewShows(startdate string, days string) (calendar *CalendarShow, result *Result) {
-	url, _ := CalendarsGETAllNewShows.Expand(M{"start_date":startdate,"days":days})
+	url, _ := calendarsGETAllNewShows.Expand(M{"start_date":startdate,"days":days})
 	result = r.client.get(url, &calendar)
 	return
 }
 
+//AllPremieres ...
 func (r *CalendarsService) AllPremieres(startdate string, days string) (calendar *CalendarShow, result *Result) {
-	url, _ := CalendarsGETSeasonPremire.Expand(M{"start_date":startdate,"days":days})
+	url, _ := calendarsGETSeasonPremire.Expand(M{"start_date":startdate,"days":days})
 	result = r.client.get(url, &calendar)
 	return
 }
 
 
-
-func (r *CalendarsService) AllMovies(startdate string, days string) (calendars *calendarMovies, result *Result) {
-	url, _ := CalendarsGETAllMovies.Expand(M{"start_date":startdate,"days":days})
+//AllMovies ...
+func (r *CalendarsService) AllMovies(startdate string, days string) (calendars *CalendarMovies, result *Result) {
+	url, _ := calendarsGETAllMovies.Expand(M{"start_date":startdate,"days":days})
 
 	result = r.client.get(url, &calendars)
 	return
 }
 
-func (r *CalendarsService) AllDVD(startdate string, days string) (calendars *calendarMovies, result *Result) {
-	url, _ := CalendarsGETAllDVD.Expand(M{"start_date":startdate,"days":days})
+//AllDVD ...
+func (r *CalendarsService) AllDVD(startdate string, days string) (calendars *CalendarMovies, result *Result) {
+	url, _ := calendarsGETAllDVD.Expand(M{"start_date":startdate,"days":days})
 	result = r.client.get(url, &calendars)
 	return
 }
 
-
+//CalendarShow ...
 type CalendarShow []struct {
 	FirstAired time.Time `json:"first_aired"`
 	Episode    struct {
@@ -120,8 +130,8 @@ type CalendarShow []struct {
 		} `json:"ids"`
 	} `json:"show"`
 }
-
-type calendarMovies []struct {
+//CalendarMovies ...
+type CalendarMovies []struct {
 	Released string `json:"released"`
 	Movie    struct {
 		Title string `json:"title"`

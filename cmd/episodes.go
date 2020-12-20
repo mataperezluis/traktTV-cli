@@ -1,3 +1,4 @@
+//Package cmd ...
 package cmd
 
 import (
@@ -47,7 +48,7 @@ var episodesCmd = &cobra.Command{
 		json.Unmarshal(byteValue, &tokenDat)
 
 		client := trakt.NewClient(
-			""+client_id+"",
+			""+clientID+"",
 			trakt.TokenAuth{AccessToken: "" + tokenDat.AccessToken + ""},
 		)
 

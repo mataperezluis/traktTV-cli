@@ -1,3 +1,4 @@
+//Package trakt ...
 package trakt
 
 
@@ -8,17 +9,17 @@ type pageable struct {
 	PrevPage  *Hyperlink
 }
 
-// Result wraps the original response for the server and the possible error.
+//Result wraps the original response for the server and the possible error.
 type Result struct {
 	Response *Response
 	Err      error
 	pageable
 }
-
+//HasError ...
 func (r *Result) HasError() bool {
 	return r.Err != nil
 }
-
+//Error ...
 func (r *Result) Error() string {
 	if r.Err != nil {
 		return r.Err.Error()

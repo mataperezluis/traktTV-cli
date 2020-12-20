@@ -1,11 +1,17 @@
+//Package trakt ...
 package trakt
 
 const (
 	//TraktAPIURL      = "https://api-v2launch.trakt.tv"
-    //TraktAPIURL      = "https://api.trakt.tv"
-    TraktAPIURL      = "https://private-anon-dcde4a7379-trakt.apiary-mock.com"
+	//TraktAPIURL      = "https://api.trakt.tv"
+	//TraktAPIURL ...
+	TraktAPIURL      = "https://private-anon-dcde4a7379-trakt.apiary-mock.com"
+	//TraktAPIVersion ...
 	TraktAPIVersion  = "2"
+	//UserAgent ...
 	UserAgent        = "Trakt Go " + Version
+	//Version ...
 	Version          = "0.0.1"
+	//DefaultMediaType ...
 	DefaultMediaType = "application/json"
 )
